@@ -5,1233 +5,1256 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Norway & Madeira 2026 🌌🌊</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --norway-dark: #0a0e1a;
-    --norway-mid: #0d1f3c;
-    --aurora: #00e5a0;
-    --aurora2: #7b4fff;
-    --madeira-dark: #1a0e05;
-    --madeira-mid: #3d1f08;
-    --sun: #f5a623;
-    --ocean: #1e6fa8;
-    --leaf: #2d7a3a;
-    --white: #ffffff;
-    --card-bg: rgba(255,255,255,0.07);
-    --card-border: rgba(255,255,255,0.12);
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--norway-dark);
-    color: white;
-    min-height: 100vh;
-    transition: background 0.6s ease;
-  }
-
-  body.madeira-mode {
-    background: var(--madeira-dark);
-  }
-
-  /* HERO */
-  .hero {
-    text-align: center;
-    padding: 48px 20px 32px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 30% 50%, rgba(0,229,160,0.15) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 30%, rgba(123,79,255,0.15) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  body.madeira-mode .hero-bg {
-    background: radial-gradient(ellipse at 30% 50%, rgba(245,166,35,0.2) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 30%, rgba(30,111,168,0.2) 0%, transparent 60%);
-  }
-
-  .trip-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--aurora);
-    margin-bottom: 10px;
-    opacity: 0.8;
-  }
-
-  body.madeira-mode .trip-label { color: var(--sun); }
-
-  .hero h1 {
-    font-size: clamp(28px, 7vw, 52px);
-    font-weight: 800;
-    letter-spacing: -1px;
-    line-height: 1.1;
-  }
-
-  .hero-sub {
-    margin-top: 10px;
-    font-size: 15px;
-    opacity: 0.6;
-  }
-
-  .costs-bar {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-top: 24px;
-    flex-wrap: wrap;
-  }
-
-  .cost-pill {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 13px;
-  }
-
-  .cost-pill span { color: var(--aurora); font-weight: 700; }
-  body.madeira-mode .cost-pill span { color: var(--sun); }
-
-  /* WIDGETS */
-  .widgets-row {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 20px;
-    flex-wrap: wrap;
-    padding: 0 4px;
-  }
-
-  .widget {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 18px;
-    padding: 14px 18px;
-    min-width: 145px;
-    flex: 1;
-    max-width: 220px;
-    text-align: left;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .widget-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    opacity: 0.45;
-    margin-bottom: 6px;
-  }
-
-  .widget-main {
-    font-size: 26px;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .widget-sub {
-    font-size: 12px;
-    opacity: 0.6;
-    line-height: 1.4;
-  }
-
-  .widget-icon {
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    font-size: 22px;
-    opacity: 0.6;
-  }
-
-  /* KP gauge bar */
-  .kp-bar {
-    display: flex;
-    gap: 3px;
-    margin-top: 8px;
-  }
-
-  .kp-seg {
-    height: 6px;
-    flex: 1;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.1);
-    transition: background 0.4s;
-  }
-
-  .kp-seg.active-low    { background: #00e5a0; }
-  .kp-seg.active-mid    { background: #f5a623; }
-  .kp-seg.active-high   { background: #ff4d4d; }
-
-  .aurora-widget { border-color: rgba(0,229,160,0.25); }
-  .aurora-widget .widget-main { color: var(--aurora); }
-
-  .weather-widget { border-color: rgba(255,255,255,0.14); }
-
-  .widget-loading { opacity: 0.35; font-size: 13px; margin-top: 6px; }
-
-  #aurora-widget { display: block; }
-  body.madeira-mode #aurora-widget { display: none; }
-
-  /* TABS */
-  .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    padding: 0 20px 32px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: inherit;
-    padding-top: 12px;
-  }
-
-  .tab {
-    padding: 10px 28px;
-    border-radius: 40px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1.5px solid var(--card-border);
-    background: transparent;
-    color: rgba(255,255,255,0.5);
-    transition: all 0.2s;
-    letter-spacing: 0.3px;
-  }
-
-  .tab.active-norway {
-    background: linear-gradient(135deg, var(--aurora), var(--aurora2));
-    border-color: transparent;
-    color: white;
-  }
-
-  .tab.active-madeira {
-    background: linear-gradient(135deg, var(--sun), var(--ocean));
-    border-color: transparent;
-    color: white;
-  }
-
-  /* SECTIONS */
-  .section { display: none; padding: 0 16px 80px; max-width: 680px; margin: 0 auto; }
-  .section.active { display: block; }
-
-  /* DAY CARD */
-  .day-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    margin-bottom: 16px;
-    overflow: hidden;
-    transition: transform 0.15s;
-  }
-
-  .day-card:active { transform: scale(0.99); }
-
-  .day-header {
-    padding: 18px 20px 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    user-select: none;
-  }
-
-  .day-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-  }
-
-  .norway-icon { background: linear-gradient(135deg, #0d3a6e, #1a5276); }
-  .madeira-icon { background: linear-gradient(135deg, #7d3900, #c0611a); }
-
-  .day-info { flex: 1; min-width: 0; }
-
-  .day-title {
-    font-size: 16px;
-    font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .day-date {
-    font-size: 12px;
-    opacity: 0.5;
-    margin-top: 2px;
-  }
-
-  .day-chevron {
-    font-size: 14px;
-    opacity: 0.4;
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-
-  .day-card.open .day-chevron { transform: rotate(180deg); }
-
-  .day-body {
-    display: none;
-    padding: 0 20px 20px;
-  }
-
-  .day-card.open .day-body { display: block; }
-
-  /* TIMELINE */
-  .timeline { position: relative; }
-
-  .timeline-item {
-    display: flex;
-    gap: 14px;
-    margin-bottom: 18px;
-    position: relative;
-  }
-
-  .timeline-item:last-child { margin-bottom: 0; }
-
-  .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: 15px;
-    top: 28px;
-    bottom: -18px;
-    width: 2px;
-    background: var(--card-border);
-  }
-
-  .timeline-item:last-child::before { display: none; }
-
-  .tl-dot {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .tl-morning { background: rgba(255,200,50,0.2); }
-  .tl-afternoon { background: rgba(255,140,0,0.2); }
-  .tl-evening { background: rgba(100,80,200,0.2); }
-  .tl-travel { background: rgba(50,200,150,0.2); }
-  .tl-activity { background: rgba(0,229,160,0.15); }
-
-  .tl-content { flex: 1; padding-top: 3px; }
-
-  .tl-time {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.5;
-    margin-bottom: 3px;
-  }
-
-  .tl-title {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .tl-desc {
-    font-size: 13px;
-    opacity: 0.65;
-    line-height: 1.5;
-  }
-
-  /* BADGES */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    margin-top: 6px;
-    margin-right: 4px;
-  }
-
-  .badge-booked { background: rgba(0,229,160,0.15); color: var(--aurora); border: 1px solid rgba(0,229,160,0.3); }
-  .badge-needed { background: rgba(255,80,80,0.15); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.3); }
-  .badge-cost { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid var(--card-border); }
-  .badge-tip { background: rgba(245,166,35,0.15); color: var(--sun); border: 1px solid rgba(245,166,35,0.3); }
-  .badge-bday { background: rgba(255,100,200,0.15); color: #ff69c4; border: 1px solid rgba(255,100,200,0.3); }
-
-  /* DIVIDER */
-  .divider {
-    border: none;
-    height: 1px;
-    background: var(--card-border);
-    margin: 14px 0;
-  }
-
-  /* LINKS */
-  .action-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    color: white;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    margin-top: 8px;
-    transition: background 0.15s;
-  }
-
-  .action-link:hover { background: rgba(255,255,255,0.14); }
-
-  /* HEADER STRIP */
-  .section-header {
-    text-align: center;
-    padding: 8px 0 20px;
-  }
-
-  .section-header h2 {
-    font-size: 22px;
-    font-weight: 800;
-  }
-
-  .section-header p {
-    font-size: 13px;
-    opacity: 0.5;
-    margin-top: 4px;
-  }
-
-  /* NOTE BOX */
-  .note-box {
-    background: rgba(255,200,50,0.08);
-    border: 1px solid rgba(255,200,50,0.2);
-    border-radius: 12px;
-    padding: 12px 16px;
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 16px;
-    color: rgba(255,220,100,0.9);
-  }
-
-  .note-box strong { color: #ffd060; }
-
-  /* TRANSITION DAY */
-  .transition-card {
-    background: linear-gradient(135deg, rgba(0,229,160,0.1), rgba(245,166,35,0.1));
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    margin-bottom: 16px;
-  }
-
-  .transition-card h3 { font-size: 18px; margin-bottom: 8px; }
-  .transition-card p { font-size: 13px; opacity: 0.7; }
-
-  /* FOOTER */
-  .footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 12px;
-    opacity: 0.3;
-  }
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg: #0a0e1a;
+  --aurora: #00e5a0;
+  --aurora2: #7b4fff;
+  --sun: #f5a623;
+  --ocean: #1e6fa8;
+  --card: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.11);
+  --text: #ffffff;
+  --muted: rgba(255,255,255,0.5);
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.5s;
+}
+body.madeira { background: #100a00; }
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  padding: 44px 20px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 30% 60%, rgba(0,229,160,.14) 0%, transparent 55%),
+              radial-gradient(ellipse at 75% 25%, rgba(123,79,255,.14) 0%, transparent 55%);
+  transition: background .5s;
+}
+body.madeira .hero-glow {
+  background: radial-gradient(ellipse at 30% 60%, rgba(245,166,35,.16) 0%, transparent 55%),
+              radial-gradient(ellipse at 75% 25%, rgba(30,111,168,.14) 0%, transparent 55%);
+}
+.eyebrow {
+  font-size: 10px; font-weight:700; letter-spacing:3px;
+  text-transform:uppercase; color:var(--aurora); opacity:.75; margin-bottom:10px;
+}
+body.madeira .eyebrow { color: var(--sun); }
+.hero h1 {
+  font-size: clamp(26px,7vw,50px); font-weight:800; letter-spacing:-1px; line-height:1.1;
+}
+.hero-sub { margin-top:8px; font-size:14px; opacity:.55; }
+
+/* COUNTDOWN */
+.countdown {
+  display: flex; justify-content: center; gap:16px;
+  margin-top: 22px; flex-wrap: wrap;
+}
+.cd-block {
+  background: var(--card); border:1px solid var(--border);
+  border-radius:14px; padding:12px 18px; min-width:70px;
+}
+.cd-num { font-size:28px; font-weight:800; line-height:1; }
+.cd-label { font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; opacity:.45; margin-top:3px; }
+
+/* WIDGETS */
+.widgets {
+  display: flex; gap:12px; justify-content:center;
+  margin-top:18px; flex-wrap:wrap; padding:0 8px;
+}
+.widget {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:14px 16px; flex:1;
+  min-width:140px; max-width:210px; position:relative; text-align:left;
+}
+.w-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; opacity:.4; margin-bottom:5px; }
+.w-icon { position:absolute; top:12px; right:14px; font-size:20px; opacity:.55; }
+.w-main { font-size:24px; font-weight:800; line-height:1; margin-bottom:3px; }
+.w-sub  { font-size:11px; opacity:.6; line-height:1.4; }
+.aurora-w { border-color: rgba(0,229,160,.25); }
+.aurora-w .w-main { color: var(--aurora); }
+.kp-bar { display:flex; gap:3px; margin-top:8px; }
+.kp-seg { height:5px; flex:1; border-radius:3px; background:rgba(255,255,255,.1); transition:background .4s; }
+.kp-low  { background:#00e5a0; }
+.kp-mid  { background:#f5a623; }
+.kp-high { background:#ff4d4d; }
+body.madeira .aurora-w { display:none; }
+
+/* TABS */
+.tabs {
+  display:flex; justify-content:center; gap:8px;
+  padding:16px 20px 28px; position:sticky; top:0; z-index:100;
+  background:inherit; backdrop-filter:blur(12px);
+}
+.tab {
+  padding:9px 22px; border-radius:40px; font-size:13px; font-weight:600;
+  cursor:pointer; border:1.5px solid var(--border); background:transparent;
+  color:var(--muted); transition:all .2s; letter-spacing:.3px;
+}
+.tab.on-n { background:linear-gradient(135deg,var(--aurora),var(--aurora2)); border-color:transparent; color:#fff; }
+.tab.on-m { background:linear-gradient(135deg,var(--sun),var(--ocean)); border-color:transparent; color:#fff; }
+
+/* SECTIONS */
+.section { display:none; padding:0 14px 90px; max-width:680px; margin:0 auto; }
+.section.active { display:block; }
+.sec-head { text-align:center; padding:4px 0 18px; }
+.sec-head h2 { font-size:20px; font-weight:800; }
+.sec-head p { font-size:12px; opacity:.45; margin-top:3px; }
+
+/* PROGRESS BAR */
+.progress-wrap { margin-bottom:18px; }
+.progress-label { font-size:11px; opacity:.45; margin-bottom:5px; }
+.progress-bar { height:4px; background:rgba(255,255,255,.1); border-radius:4px; }
+.progress-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--aurora),var(--aurora2)); width:0; transition:width .4s; }
+body.madeira .progress-fill { background:linear-gradient(90deg,var(--sun),var(--ocean)); }
+
+/* NOTE BOX */
+.note { background:rgba(255,200,50,.07); border:1px solid rgba(255,200,50,.2); border-radius:12px; padding:11px 15px; font-size:12px; line-height:1.5; margin-bottom:14px; color:rgba(255,210,90,.9); }
+.note strong { color:#ffd060; }
+
+/* DAY CARD */
+.day-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:18px; margin-bottom:13px; overflow:hidden; transition:transform .12s;
+}
+.day-card:active { transform:scale(.99); }
+.day-head {
+  padding:16px 18px 13px; cursor:pointer;
+  display:flex; align-items:center; gap:13px; user-select:none;
+}
+.day-ico {
+  width:42px; height:42px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; flex-shrink:0;
+  background:linear-gradient(135deg,#0d3a6e,#1a5276);
+}
+body.madeira .day-ico { background:linear-gradient(135deg,#7d3900,#b85c15); }
+.day-info { flex:1; min-width:0; }
+.day-title { font-size:15px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.day-date  { font-size:11px; opacity:.45; margin-top:2px; }
+.day-chev  { font-size:13px; opacity:.35; transition:transform .2s; flex-shrink:0; }
+.day-card.open .day-chev { transform:rotate(180deg); }
+.day-body  { display:none; padding:0 18px 18px; }
+.day-card.open .day-body { display:block; }
+
+/* TIMELINE */
+.tl-item {
+  display:flex; gap:13px; margin-bottom:16px; position:relative;
+}
+.tl-item:last-child { margin-bottom:0; }
+.tl-item::before {
+  content:''; position:absolute; left:14px; top:27px; bottom:-16px;
+  width:2px; background:var(--border);
+}
+.tl-item:last-child::before { display:none; }
+.tl-dot {
+  width:28px; height:28px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; flex-shrink:0; margin-top:2px;
+}
+.d-morn { background:rgba(255,200,50,.18); }
+.d-noon { background:rgba(255,140,0,.18); }
+.d-eve  { background:rgba(100,80,200,.2); }
+.d-move { background:rgba(0,229,160,.15); }
+.tl-body { flex:1; padding-top:3px; }
+.tl-time { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; opacity:.4; margin-bottom:2px; }
+.tl-title { font-size:14px; font-weight:600; margin-bottom:4px; }
+.tl-desc  { font-size:12px; opacity:.6; line-height:1.5; }
+
+/* CHECK BUTTON */
+.check-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 12px; border-radius:20px; font-size:11px; font-weight:600;
+  cursor:pointer; border:1px solid var(--border); background:transparent;
+  color:var(--muted); margin-top:7px; transition:all .2s; user-select:none;
+}
+.check-btn.done {
+  background:rgba(0,229,160,.15); border-color:rgba(0,229,160,.35);
+  color:var(--aurora); text-decoration:line-through;
+}
+body.madeira .check-btn.done { background:rgba(245,166,35,.15); border-color:rgba(245,166,35,.35); color:var(--sun); }
+
+/* ACTION LINKS */
+.actions { display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
+.act {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:6px 12px; border-radius:10px; font-size:12px; font-weight:500;
+  text-decoration:none; color:var(--text);
+  background:rgba(255,255,255,.08); border:1px solid var(--border);
+  transition:background .15s;
+}
+.act:hover { background:rgba(255,255,255,.14); }
+
+/* BADGES */
+.badge {
+  display:inline-flex; align-items:center; gap:3px;
+  padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700;
+  margin-top:5px; margin-right:4px;
+}
+.b-ok  { background:rgba(0,229,160,.12); color:var(--aurora); border:1px solid rgba(0,229,160,.25); }
+.b-warn{ background:rgba(255,80,80,.12); color:#ff6b6b; border:1px solid rgba(255,80,80,.25); }
+.b-tip { background:rgba(245,166,35,.12); color:var(--sun); border:1px solid rgba(245,166,35,.25); }
+.b-bday{ background:rgba(255,100,200,.12); color:#ff69c4; border:1px solid rgba(255,100,200,.25); }
+
+/* DIVIDER */
+hr.div { border:none; height:1px; background:var(--border); margin:12px 0; }
+
+/* TRANSIT CARD */
+.transit {
+  background:linear-gradient(135deg,rgba(0,229,160,.1),rgba(245,166,35,.1));
+  border:1px solid rgba(255,255,255,.14); border-radius:18px;
+  padding:20px; text-align:center; margin-bottom:14px;
+}
+.transit h3 { font-size:17px; margin-bottom:6px; }
+.transit p  { font-size:12px; opacity:.65; }
+
+/* PACKING LIST */
+.pack-group { margin-bottom:20px; }
+.pack-group h3 { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; opacity:.5; margin-bottom:10px; }
+.pack-item {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px; border-radius:12px; cursor:pointer;
+  border:1px solid transparent; transition:all .15s; margin-bottom:6px;
+  background:var(--card); border-color:var(--border);
+}
+.pack-item:active { transform:scale(.99); }
+.pack-check {
+  width:22px; height:22px; border-radius:7px; border:2px solid var(--border);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  font-size:12px; transition:all .2s;
+}
+.pack-item.packed .pack-check {
+  background:var(--aurora); border-color:var(--aurora); color:#000;
+}
+body.madeira .pack-item.packed .pack-check { background:var(--sun); border-color:var(--sun); }
+.pack-item.packed .pack-name { text-decoration:line-through; opacity:.4; }
+.pack-name { font-size:14px; }
+.pack-icon { font-size:16px; flex-shrink:0; }
+
+/* AURORA TIPS */
+.tips-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px; }
+@media(max-width:480px){ .tips-grid { grid-template-columns:1fr; } }
+.tip-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:14px; padding:14px;
+}
+.tip-card h4 { font-size:13px; font-weight:700; margin-bottom:5px; }
+.tip-card p  { font-size:12px; opacity:.6; line-height:1.5; }
+
+/* FOOTER */
+.foot { text-align:center; padding:20px; font-size:11px; opacity:.25; }
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <div class="hero-bg"></div>
-  <div class="trip-label">March 24 – April 7, 2026</div>
+  <div class="hero-glow"></div>
+  <div class="eyebrow">March 24 – April 7, 2026</div>
   <h1>Norway 🌌 & Madeira 🌊</h1>
-  <p class="hero-sub">Tromsø → Funchal · 14 days · your adventure awaits</p>
-  <div class="costs-bar">
-    <div class="cost-pill">🏠 Norway Airbnb <span>$2,032</span></div>
-    <div class="cost-pill">🏠 Madeira Airbnb <span>$1,395.50</span></div>
-    <div class="cost-pill">🎿 Excursions (per couple) <span>$1,583</span></div>
+  <p class="hero-sub">Tromsø → Funchal · The whole crew</p>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown" id="countdown">
+    <div class="cd-block"><div class="cd-num" id="cd-d">—</div><div class="cd-label">Days</div></div>
+    <div class="cd-block"><div class="cd-num" id="cd-h">—</div><div class="cd-label">Hours</div></div>
+    <div class="cd-block"><div class="cd-num" id="cd-m">—</div><div class="cd-label">Mins</div></div>
+    <div class="cd-block"><div class="cd-num" id="cd-s">—</div><div class="cd-label">Secs</div></div>
   </div>
 
   <!-- LIVE WIDGETS -->
-  <div class="widgets-row">
-
-    <!-- Aurora / Northern Lights -->
-    <div class="widget aurora-widget" id="aurora-widget">
-      <div class="widget-label">Aurora Forecast</div>
-      <div class="widget-icon">🌌</div>
-      <div class="widget-main" id="kp-value">—</div>
-      <div class="widget-sub" id="kp-label">Loading KP index…</div>
+  <div class="widgets">
+    <div class="widget aurora-w" id="aurora-w">
+      <div class="w-label">Aurora · KP Index</div>
+      <div class="w-icon">🌌</div>
+      <div class="w-main" id="kp-val">—</div>
+      <div class="w-sub"  id="kp-txt">Loading…</div>
       <div class="kp-bar" id="kp-bar">
-        <div class="kp-seg" id="ks0"></div>
-        <div class="kp-seg" id="ks1"></div>
-        <div class="kp-seg" id="ks2"></div>
-        <div class="kp-seg" id="ks3"></div>
-        <div class="kp-seg" id="ks4"></div>
-        <div class="kp-seg" id="ks5"></div>
-        <div class="kp-seg" id="ks6"></div>
-        <div class="kp-seg" id="ks7"></div>
-        <div class="kp-seg" id="ks8"></div>
+        <div class="kp-seg" id="s0"></div><div class="kp-seg" id="s1"></div>
+        <div class="kp-seg" id="s2"></div><div class="kp-seg" id="s3"></div>
+        <div class="kp-seg" id="s4"></div><div class="kp-seg" id="s5"></div>
+        <div class="kp-seg" id="s6"></div><div class="kp-seg" id="s7"></div>
+        <div class="kp-seg" id="s8"></div>
       </div>
     </div>
-
-    <!-- Weather -->
-    <div class="widget weather-widget" id="weather-widget">
-      <div class="widget-label" id="weather-city">Weather · Tromsø</div>
-      <div class="widget-icon" id="weather-icon">🌤️</div>
-      <div class="widget-main" id="weather-temp">—</div>
-      <div class="widget-sub" id="weather-desc">Loading…</div>
+    <div class="widget" id="wx-w">
+      <div class="w-label" id="wx-city">Weather</div>
+      <div class="w-icon" id="wx-icon">🌤️</div>
+      <div class="w-main" id="wx-temp">—</div>
+      <div class="w-sub"  id="wx-desc">Loading…</div>
     </div>
-
   </div>
 </div>
 
+<!-- TABS -->
 <div class="tabs">
-  <button class="tab active-norway" onclick="showSection('norway')">🌌 Norway</button>
-  <button class="tab" onclick="showSection('madeira')">🌊 Madeira</button>
+  <button class="tab on-n"  onclick="show('norway')">🌌 Norway</button>
+  <button class="tab"       onclick="show('madeira')">🌊 Madeira</button>
+  <button class="tab"       onclick="show('pack')">🎒 Packing</button>
 </div>
 
-<!-- ═══════════ NORWAY ═══════════ -->
+<!-- ══════════ NORWAY ══════════ -->
 <div class="section active" id="norway">
-  <div class="section-header">
-    <h2>🇳🇴 Tromsø, Norway</h2>
-    <p>March 24 – 31 · Arctic adventures & northern lights</p>
+  <div class="sec-head"><h2>🇳🇴 Tromsø, Norway</h2><p>March 24 – 31 · Arctic adventures & northern lights</p></div>
+
+  <div class="progress-wrap">
+    <div class="progress-label" id="nor-prog-label">0 of 6 activities done</div>
+    <div class="progress-bar"><div class="progress-fill" id="nor-prog"></div></div>
   </div>
 
-  <div class="note-box">
-    <strong>⚠️ Still needs booking:</strong> Fjellheisen Cable Car — ~$50/person. Book online before 3/26.
-  </div>
+  <div class="note"><strong>⚠️ Book this:</strong> Fjellheisen Cable Car — ~$50/person. Grab tickets before March 26.</div>
 
-  <!-- Monday 3/24 -->
+  <!-- Mar 24 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon norway-icon">✈️</div>
-      <div class="day-info">
-        <div class="day-title">Departure Day</div>
-        <div class="day-date">Monday, March 24</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">✈️</div>
+      <div class="day-info"><div class="day-title">Departure</div><div class="day-date">Monday, March 24</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🌙</div>
-          <div class="tl-content">
-            <div class="tl-time">9:00 PM</div>
-            <div class="tl-title">Depart for Norway</div>
-            <div class="tl-desc">Flight departs. Get some rest — long travel day ahead.</div>
-          </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🌙</div>
+        <div class="tl-body">
+          <div class="tl-time">9:00 PM</div>
+          <div class="tl-title">Flight departs</div>
+          <div class="tl-desc">Long haul. Rest up — you've got a full week ahead.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Wednesday 3/25 -->
+  <!-- Mar 25 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon norway-icon">🛬</div>
-      <div class="day-info">
-        <div class="day-title">Arrive in Tromsø</div>
-        <div class="day-date">Wednesday, March 25</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🛬</div>
+      <div class="day-info"><div class="day-title">Arrive in Tromsø</div><div class="day-date">Wednesday, March 25</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-travel">✈️</div>
-          <div class="tl-content">
-            <div class="tl-time">7:30 PM</div>
-            <div class="tl-title">Land in Tromsø</div>
-            <div class="tl-desc">Check into Airbnb. Drop bags, freshen up.</div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🛬</div>
+        <div class="tl-body">
+          <div class="tl-time">7:30 PM</div>
+          <div class="tl-title">Land in Tromsø</div>
+          <div class="tl-desc">Check into the Airbnb. Drop bags, freshen up.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Tromsø+Airport" target="_blank">🗺️ Airport</a>
           </div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🍽️</div>
-          <div class="tl-content">
-            <div class="tl-time">Evening</div>
-            <div class="tl-title">Dinner & Settle In</div>
-            <div class="tl-desc">Find a local spot for dinner. Explore Tromsø city center if feeling up to it.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🍽️</div>
+        <div class="tl-body">
+          <div class="tl-time">Evening</div>
+          <div class="tl-title">Dinner & first look at the city</div>
+          <div class="tl-desc">Easy night. Explore the waterfront if you're up for it.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Tromsø+city+center,+Norway" target="_blank">🗺️ City Center</a>
           </div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🌌</div>
-          <div class="tl-content">
-            <div class="tl-time">Night</div>
-            <div class="tl-title">Northern Lights Hunt</div>
-            <div class="tl-desc">Check aurora forecast. Head away from city lights if conditions are good. Clear skies = go for it.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🌌</div>
+        <div class="tl-body">
+          <div class="tl-time">Night</div>
+          <div class="tl-title">Northern lights watch</div>
+          <div class="tl-desc">Check the KP widget above. If it's above 3, head away from city lights. Best spot: Ersfjordbotn (~25 min drive).</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Ersfjordbotn,+Norway" target="_blank">🗺️ Ersfjordbotn</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Thursday 3/26 -->
+  <!-- Mar 26 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon norway-icon">🚶</div>
-      <div class="day-info">
-        <div class="day-title">Walking Tour + Cable Car</div>
-        <div class="day-date">Thursday, March 26</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🚶</div>
+      <div class="day-info"><div class="day-title">Walking Tour + Cable Car</div><div class="day-date">Thursday, March 26</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🌅</div>
-          <div class="tl-content">
-            <div class="tl-time">9:45 AM — arrive 15 min early</div>
-            <div class="tl-title">Free Walking Tour of Tromsø</div>
-            <div class="tl-desc">10:00 AM – 12:00 PM. Check email for exact meeting point. Just leave a tip.</div>
-            <div>
-              <span class="badge badge-booked">✅ Booked</span>
-              <span class="badge badge-tip">💰 Tip-based</span>
-            </div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🗺️</div>
+        <div class="tl-body">
+          <div class="tl-time">9:45 AM — be there 15 min early</div>
+          <div class="tl-title">Free Walking Tour of Tromsø</div>
+          <div class="tl-desc">10 AM – 12 PM. Check your email for exact meeting point. Tip-based only.</div>
+          <span class="badge b-ok">✅ Booked</span>
+          <span class="badge b-tip">💰 Tip-based</span>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Tromsø+city+center,+Norway" target="_blank">🗺️ Meeting point</a>
+            <a class="act" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Tromsø+Walking+Tour&dates=20260326T090000Z/20260326T110000Z&details=Free+walking+tour+of+Tromsø.+Tip-based.+Be+there+15+min+early.&location=Tromsø,+Norway" target="_blank">📅 Add to calendar</a>
+          </div>
+          <div style="margin-top:8px"><button class="check-btn" onclick="checkOff(event,'nor1')">☐ Mark done</button></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-noon">🌅</div>
+        <div class="tl-body">
+          <div class="tl-time">Afternoon — free time</div>
+          <div class="tl-title">Explore Tromsø</div>
+          <div class="tl-desc">Lunch, wander the waterfront, Arctic Cathedral if you want.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Arctic+Cathedral+Tromsø" target="_blank">🗺️ Arctic Cathedral</a>
           </div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-afternoon">🌤️</div>
-          <div class="tl-content">
-            <div class="tl-time">Afternoon</div>
-            <div class="tl-title">Explore Tromsø</div>
-            <div class="tl-desc">Lunch, wander the waterfront, visit the Arctic Cathedral if you want.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🚡</div>
-          <div class="tl-content">
-            <div class="tl-time">5:30 – 6:00 PM</div>
-            <div class="tl-title">Fjellheisen Cable Car</div>
-            <div class="tl-desc">Sunset + aurora hunting from above. Stunning views over the city and fjord. Return ticket included.</div>
-            <div>
-              <span class="badge badge-needed">⚠️ Book This</span>
-              <span class="badge badge-cost">~$50/person</span>
-            </div>
-            <a href="https://fjellheisen.no/en" target="_blank" class="action-link">🔗 Book Fjellheisen →</a>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🚡</div>
+        <div class="tl-body">
+          <div class="tl-time">5:30 – 6:00 PM</div>
+          <div class="tl-title">Fjellheisen Cable Car</div>
+          <div class="tl-desc">Ride up for sunset + aurora hunting above the city. Stunning views over the fjord. Return ticket.</div>
+          <span class="badge b-warn">⚠️ Book this now</span>
+          <div class="actions">
+            <a class="act" href="https://fjellheisen.no/en" target="_blank">🎟️ Book tickets</a>
+            <a class="act" href="https://maps.google.com/?q=Fjellheisen+Cable+Car+Tromsø" target="_blank">🗺️ Map</a>
+            <a class="act" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Fjellheisen+Cable+Car&dates=20260326T163000Z/20260326T190000Z&details=Sunset+and+aurora+hunting+from+above+Tromsø.&location=Fjellheisen,+Tromsø,+Norway" target="_blank">📅 Calendar</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Friday 3/27 -->
+  <!-- Mar 27 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon norway-icon">🐕</div>
-      <div class="day-info">
-        <div class="day-title">Dog Sledding</div>
-        <div class="day-date">Friday, March 27</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🐕</div>
+      <div class="day-info"><div class="day-title">Dog Sledding</div><div class="day-date">Friday, March 27</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🐕</div>
-          <div class="tl-content">
-            <div class="tl-time">11:30 AM · ~5 hours</div>
-            <div class="tl-title">Dog Sledding Adventure</div>
-            <div class="tl-desc">Full husky sled experience through the Arctic wilderness. One of the most memorable experiences of the trip. Dress very warm — multiple layers, waterproof outer layer essential.</div>
-            <div>
-              <span class="badge badge-booked">✅ Booked</span>
-              <span class="badge badge-cost">$309.50/person</span>
-            </div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🐕</div>
+        <div class="tl-body">
+          <div class="tl-time">11:30 AM · ~5 hours</div>
+          <div class="tl-title">Dog Sledding Adventure</div>
+          <div class="tl-desc">Husky sled through the Arctic wilderness. Dress in maximum layers — waterproof outer shell is essential. Back around 4:30–5 PM.</div>
+          <span class="badge b-ok">✅ Booked</span>
+          <span class="badge b-tip">🧤 Dress warm</span>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Tromsø+Villmarkssenter" target="_blank">🗺️ Map</a>
+            <a class="act" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Dog+Sledding+Tromsø&dates=20260327T103000Z/20260327T160000Z&details=Dog+sledding+adventure+~5+hours.+Dress+in+maximum+layers.&location=Tromsø+Villmarkssenter,+Norway" target="_blank">📅 Calendar</a>
           </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🍺</div>
-          <div class="tl-content">
-            <div class="tl-time">Evening</div>
-            <div class="tl-title">Rest & Recover</div>
-            <div class="tl-desc">Back around 4:30–5 PM. Dinner in town. Big day tomorrow — early start.</div>
-          </div>
+          <div style="margin-top:8px"><button class="check-btn" onclick="checkOff(event,'nor2')">☐ Mark done</button></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Saturday 3/28 -->
+  <!-- Mar 28 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon norway-icon">🏍️</div>
-      <div class="day-info">
-        <div class="day-title">Snowmobile Tour</div>
-        <div class="day-date">Saturday, March 28</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🏍️</div>
+      <div class="day-info"><div class="day-title">Snowmobile Tour</div><div class="day-date">Saturday, March 28</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">⛄</div>
-          <div class="tl-content">
-            <div class="tl-time">8:30 AM · ~8 hours</div>
-            <div class="tl-title">Snowmobile Tour</div>
-            <div class="tl-desc">Full day ripping through the Arctic on snowmobiles. Longest day of the trip — pack snacks and stay hydrated. Return around 4:30–5 PM.</div>
-            <div>
-              <span class="badge badge-booked">✅ Booked</span>
-              <span class="badge badge-cost">$264/person</span>
-            </div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">⛄</div>
+        <div class="tl-body">
+          <div class="tl-time">8:30 AM · ~8 hours</div>
+          <div class="tl-title">Snowmobile Tour</div>
+          <div class="tl-desc">Full day ripping through the Arctic on snowmobiles. Longest day — pack snacks, stay hydrated. Back ~4:30–5 PM.</div>
+          <span class="badge b-ok">✅ Booked</span>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Tromsø+wilderness+Norway" target="_blank">🗺️ Map</a>
+            <a class="act" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Snowmobile+Tour+Tromsø&dates=20260328T073000Z/20260328T160000Z&details=Full+day+snowmobile+tour+~8+hours.+Bring+snacks.&location=Tromsø,+Norway" target="_blank">📅 Calendar</a>
           </div>
+          <div style="margin-top:8px"><button class="check-btn" onclick="checkOff(event,'nor3')">☐ Mark done</button></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Sunday 3/29 -->
+  <!-- Mar 29 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon norway-icon">🦌</div>
-      <div class="day-info">
-        <div class="day-title">Snowshoe + Reindeer</div>
-        <div class="day-date">Sunday, March 29</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🦌</div>
+      <div class="day-info"><div class="day-title">Snowshoe + Reindeer</div><div class="day-date">Sunday, March 29</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🦌</div>
-          <div class="tl-content">
-            <div class="tl-time">10:00 AM · ~4 hours</div>
-            <div class="tl-title">Snowshoeing Hike + Reindeer Experience</div>
-            <div class="tl-desc">Trek through the Arctic landscape on snowshoes, then meet and feed reindeer with the Sami people. Unique cultural experience. Back by 2 PM.</div>
-            <div>
-              <span class="badge badge-booked">✅ Booked</span>
-              <span class="badge badge-cost">$181.60/person</span>
-            </div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🦌</div>
+        <div class="tl-body">
+          <div class="tl-time">10:00 AM · ~4 hours</div>
+          <div class="tl-title">Snowshoeing Hike + Reindeer Experience</div>
+          <div class="tl-desc">Snowshoe through the Arctic landscape, then meet and feed reindeer with the Sami people. Cultural experience unlike anything else. Back by 2 PM.</div>
+          <span class="badge b-ok">✅ Booked</span>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Camp+Tamok+Tromsø+Norway" target="_blank">🗺️ Camp Tamok</a>
+            <a class="act" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Snowshoe+%2B+Reindeer+Experience&dates=20260329T080000Z/20260329T120000Z&details=Snowshoeing+hike+with+reindeer+experience+with+the+Sami+people.&location=Tromsø,+Norway" target="_blank">📅 Calendar</a>
           </div>
+          <div style="margin-top:8px"><button class="check-btn" onclick="checkOff(event,'nor4')">☐ Mark done</button></div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🌌</div>
-          <div class="tl-content">
-            <div class="tl-time">Night</div>
-            <div class="tl-title">Last Night in Norway</div>
-            <div class="tl-desc">Final aurora watch. One more chance — make it count.</div>
-          </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🌌</div>
+        <div class="tl-body">
+          <div class="tl-time">Night</div>
+          <div class="tl-title">Last Norway aurora chance</div>
+          <div class="tl-desc">Make it count. Check the KP widget — head out if it's above 3.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Monday 3/30 -->
+  <!-- Mar 30 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon norway-icon">🧖</div>
-      <div class="day-info">
-        <div class="day-title">Sauna & Arctic Plunge</div>
-        <div class="day-date">Monday, March 30</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🧖</div>
+      <div class="day-info"><div class="day-title">Sauna & Arctic Plunge</div><div class="day-date">Monday, March 30</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🌄</div>
-          <div class="tl-content">
-            <div class="tl-time">Morning</div>
-            <div class="tl-title">Free Morning</div>
-            <div class="tl-desc">Sleep in. Last morning in Tromsø — pick up any souvenirs, explore anything you missed.</div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">☕</div>
+        <div class="tl-body">
+          <div class="tl-time">Morning — free</div>
+          <div class="tl-title">Slow morning in Tromsø</div>
+          <div class="tl-desc">Sleep in. Last morning here — pick up souvenirs, explore anything you missed.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Tromsø+city+centre" target="_blank">🗺️ City center</a>
           </div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-afternoon">🧖</div>
-          <div class="tl-content">
-            <div class="tl-time">4:00 PM · ~1 hour</div>
-            <div class="tl-title">Sauna + Arctic Plunge</div>
-            <div class="tl-desc">Hot sauna followed by a dip in the Arctic ocean. Insane contrast, unforgettable feeling. Pack swimming gear.</div>
-            <div>
-              <span class="badge badge-booked">✅ Booked</span>
-              <span class="badge badge-cost">$36.50/person</span>
-            </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-noon">🧖</div>
+        <div class="tl-body">
+          <div class="tl-time">4:00 PM · ~1 hour</div>
+          <div class="tl-title">Sauna + Arctic Plunge</div>
+          <div class="tl-desc">Scorching sauna followed by a dip in the Arctic ocean. Wild contrast, unforgettable feeling. Bring swimwear.</div>
+          <span class="badge b-ok">✅ Booked</span>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Tromsø+Arctic+Sauna" target="_blank">🗺️ Map</a>
+            <a class="act" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Sauna+%2B+Arctic+Plunge+Tromsø&dates=20260330T140000Z/20260330T150000Z&details=Hot+sauna+followed+by+Arctic+ocean+plunge.+Bring+swimwear.&location=Tromsø,+Norway" target="_blank">📅 Calendar</a>
           </div>
+          <div style="margin-top:8px"><button class="check-btn" onclick="checkOff(event,'nor5')">☐ Mark done</button></div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🍽️</div>
-          <div class="tl-content">
-            <div class="tl-time">Evening</div>
-            <div class="tl-title">Pack & Last Norway Dinner</div>
-            <div class="tl-desc">Early-ish night — flight leaves at 8:20 AM tomorrow.</div>
-          </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🍽️</div>
+        <div class="tl-body">
+          <div class="tl-time">Evening</div>
+          <div class="tl-title">Pack & last Norway dinner</div>
+          <div class="tl-desc">Early-ish night — flight leaves 8:20 AM tomorrow.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Tuesday 3/31 — transition -->
-  <div class="transition-card">
-    <div style="font-size: 32px; margin-bottom: 10px;">🌌 → 🌊</div>
-    <h3>Norway to Madeira</h3>
+  <!-- Transition -->
+  <div class="transit">
+    <div style="font-size:30px;margin-bottom:8px">🌌 → 🌊</div>
+    <h3>Norway → Madeira</h3>
     <p><strong>Tuesday, March 31</strong></p>
-    <p style="margin-top: 8px;">Depart Tromsø <strong>8:20 AM</strong> · Arrive Funchal <strong>4:25 PM</strong></p>
-    <p style="margin-top: 6px; font-size: 12px; opacity: 0.5;">Pack the night before — early morning flight</p>
+    <p style="margin-top:6px">Depart Tromsø <strong>8:20 AM</strong> · Arrive Funchal <strong>4:25 PM</strong></p>
+    <p style="margin-top:5px;font-size:11px;opacity:.4">Pack the night before — early flight</p>
+  </div>
+
+  <!-- Aurora Tips -->
+  <div style="padding:4px 0 8px">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;margin-bottom:12px">🌌 Northern Lights Guide</div>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h4>When to go</h4>
+        <p>Check KP widget. Go out when KP ≥ 3. Best window: 9 PM – 2 AM. Clear skies required — check yr.no.</p>
+      </div>
+      <div class="tip-card">
+        <h4>Best spots</h4>
+        <p>Drive 20+ min from city. Ersfjordbotn beach, Kvaløya island. Away from streetlights is key.</p>
+      </div>
+      <div class="tip-card">
+        <h4>Camera settings</h4>
+        <p>ISO 1600–3200 · f/2.8 or lower · 8–15 sec exposure · Tripod essential. Shoot RAW if possible.</p>
+      </div>
+      <div class="tip-card">
+        <h4>Apps to use</h4>
+        <p>My Aurora Forecast (iOS/Android) · Space Weather Live · yr.no for Tromsø clouds.</p>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ═══════════ MADEIRA ═══════════ -->
+<!-- ══════════ MADEIRA ══════════ -->
 <div class="section" id="madeira">
-  <div class="section-header">
-    <h2>🇵🇹 Madeira, Portugal</h2>
-    <p>March 31 – April 7 · Hikes, cliffs & island life</p>
+  <div class="sec-head"><h2>🇵🇹 Madeira, Portugal</h2><p>March 31 – April 7 · Hikes, cliffs & island life</p></div>
+
+  <div class="progress-wrap">
+    <div class="progress-label" id="mad-prog-label">0 of 8 activities done</div>
+    <div class="progress-bar"><div class="progress-fill" id="mad-prog"></div></div>
   </div>
 
-  <!-- April 1 -->
+  <!-- Apr 1 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon madeira-icon">💧</div>
-      <div class="day-info">
-        <div class="day-title">Central Highlands & Waterfalls</div>
-        <div class="day-date">Wednesday, April 1</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">💧</div>
+      <div class="day-info"><div class="day-title">Central Highlands & Waterfalls</div><div class="day-date">Wednesday, April 1</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🌿</div>
-          <div class="tl-content">
-            <div class="tl-time">Morning</div>
-            <div class="tl-title">Levada do Caldeirão Verde</div>
-            <div class="tl-desc">Jungle levada hike through dramatic tunnels deep in the laurel forest. One of Madeira's most iconic trails. <strong>Bring a headlamp or flashlight</strong> — tunnels are dark.</div>
-            <span class="badge badge-tip">🔦 Headlamp required</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-afternoon">💦</div>
-          <div class="tl-content">
-            <div class="tl-time">Afternoon</div>
-            <div class="tl-title">Anjos Waterfall + Ribeira da Janela</div>
-            <div class="tl-desc">Anjos waterfall hike, then drive to the coast for the Ribeira da Janela rock formations — striking volcanic stacks rising from the ocean.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🍽️</div>
-          <div class="tl-content">
-            <div class="tl-time">Evening</div>
-            <div class="tl-title">Dinner in Funchal</div>
-            <div class="tl-desc">Casual first night. Try <strong>Taberna Madeira</strong> or <strong>Kampo</strong>.</div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🌿</div>
+        <div class="tl-body">
+          <div class="tl-time">Morning</div>
+          <div class="tl-title">Levada do Caldeirão Verde</div>
+          <div class="tl-desc">Jungle levada hike through dramatic tunnels in the laurel forest. Madeira's most iconic trail.</div>
+          <span class="badge b-tip">🔦 Headlamp required</span>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Caldeirão+Verde+Levada+Madeira" target="_blank">🗺️ Trailhead</a>
           </div>
         </div>
       </div>
-      <hr class="divider">
-      <div style="font-size: 12px; opacity: 0.5;">🚗 ~2 hrs driving total</div>
+      <div class="tl-item">
+        <div class="tl-dot d-noon">💦</div>
+        <div class="tl-body">
+          <div class="tl-time">Afternoon</div>
+          <div class="tl-title">Anjos Waterfall + Ribeira da Janela</div>
+          <div class="tl-desc">Waterfall hike then the dramatic coastal rock formations on the north coast.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Anjos+Waterfall+Madeira" target="_blank">🗺️ Anjos</a>
+            <a class="act" href="https://maps.google.com/?q=Ribeira+da+Janela+Madeira" target="_blank">🗺️ Ribeira</a>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🍽️</div>
+        <div class="tl-body">
+          <div class="tl-time">Evening</div>
+          <div class="tl-title">Dinner in Funchal</div>
+          <div class="tl-desc">Try Taberna Madeira or Kampo for the first night.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Taberna+Madeira+Funchal" target="_blank">🗺️ Taberna Madeira</a>
+            <a class="act" href="https://maps.google.com/?q=Kampo+Restaurant+Funchal" target="_blank">🗺️ Kampo</a>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:4px"><button class="check-btn" onclick="checkOff(event,'mad1')">☐ Mark done</button></div>
+      <hr class="div"><div style="font-size:11px;opacity:.4">🚗 ~2 hrs driving total</div>
     </div>
   </div>
 
-  <!-- April 2 — BIRTHDAY -->
+  <!-- Apr 2 — BIRTHDAY -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon madeira-icon">🎂</div>
-      <div class="day-info">
-        <div class="day-title">Sunrise Summit + Birthday Dinner</div>
-        <div class="day-date">Thursday, April 2 🎂</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🎂</div>
+      <div class="day-info"><div class="day-title">Sunrise Summit + Birthday Dinner</div><div class="day-date">Thursday, April 2 🎂</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🌄</div>
-          <div class="tl-content">
-            <div class="tl-time">6:45–7:00 AM — depart Funchal</div>
-            <div class="tl-title">Sunrise at Pico do Arieiro</div>
-            <div class="tl-desc">Arrive by 7:30 AM. Sunrise ~7:45 AM. Walk 15 min to <strong>Miradouro do Ninho da Manta</strong> for dramatic ridge views with fewer crowds.</div>
-            <span class="badge badge-bday">🎂 Birthday sunrise</span>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🥾</div>
-          <div class="tl-content">
-            <div class="tl-time">Morning</div>
-            <div class="tl-title">PR1 Ridge Hike</div>
-            <div class="tl-desc">Walk 1–2 km out toward Pico Ruivo for the best ridge views. Dramatic above-the-clouds scenery.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🚗</div>
-          <div class="tl-content">
-            <div class="tl-time">Late Morning</div>
-            <div class="tl-title">Drive to Achada do Teixeira</div>
-            <div class="tl-desc">~1 hr scenic mountain drive north. Then hike PR1.2 — <strong>Pico Ruivo Summit</strong> (2.8 km round trip, ~1.5–2 hrs, moderate). Madeira's highest peak at 1,862m.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-afternoon">🌊</div>
-          <div class="tl-content">
-            <div class="tl-time">Afternoon</div>
-            <div class="tl-title">Ponta de São Lourenço</div>
-            <div class="tl-desc">Drive east coast. Volcanic peninsula with dramatic ocean cliffs — arguably the best coastal scenery on the island.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🍽️</div>
-          <div class="tl-content">
-            <div class="tl-time">8:30 PM</div>
-            <div class="tl-title">Birthday Dinner at ÁKUA</div>
-            <div class="tl-desc">Reservation confirmed. Must-orders: tuna tartare, octopus rice, limpets.</div>
-            <span class="badge badge-booked">✅ Reserved</span>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🌄</div>
+        <div class="tl-body">
+          <div class="tl-time">6:45 AM — depart Funchal</div>
+          <div class="tl-title">Sunrise at Pico do Arieiro</div>
+          <div class="tl-desc">Arrive 7:30 AM. Sunrise ~7:45 AM. Walk 15 min to Miradouro do Ninho da Manta — dramatic ridge views, fewer crowds.</div>
+          <span class="badge b-bday">🎂 Birthday sunrise</span>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Pico+do+Arieiro+Madeira" target="_blank">🗺️ Pico do Arieiro</a>
+            <a class="act" href="https://maps.google.com/?q=Miradouro+do+Ninho+da+Manta+Madeira" target="_blank">🗺️ Viewpoint</a>
           </div>
         </div>
       </div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🥾</div>
+        <div class="tl-body">
+          <div class="tl-time">Late Morning</div>
+          <div class="tl-title">Pico Ruivo Summit (PR1.2)</div>
+          <div class="tl-desc">Drive to Achada do Teixeira (~1 hr). Then hike to Madeira's highest peak — 2.8 km round trip, ~1.5–2 hrs, moderate. Worth every step.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Achada+do+Teixeira+Madeira" target="_blank">🗺️ Trailhead</a>
+            <a class="act" href="https://maps.google.com/?q=Pico+Ruivo+Madeira" target="_blank">🗺️ Summit</a>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-noon">🌊</div>
+        <div class="tl-body">
+          <div class="tl-time">Afternoon</div>
+          <div class="tl-title">Ponta de São Lourenço</div>
+          <div class="tl-desc">East coast volcanic peninsula. Best coastal scenery on the island — dramatic cliffs straight into the ocean.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Ponta+de+São+Lourenço+Madeira" target="_blank">🗺️ Map</a>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🍽️</div>
+        <div class="tl-body">
+          <div class="tl-time">8:30 PM</div>
+          <div class="tl-title">Birthday Dinner at ÁKUA</div>
+          <div class="tl-desc">Reservation confirmed. Must-orders: tuna tartare, octopus rice, limpets.</div>
+          <span class="badge b-ok">✅ Reserved</span>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=AKUA+Restaurant+Funchal+Madeira" target="_blank">🗺️ ÁKUA</a>
+            <a class="act" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=🎂+Birthday+Dinner+at+ÁKUA&dates=20260402T193000Z/20260402T220000Z&details=Birthday+dinner+reservation+at+ÁKUA+Funchal.+Tuna+tartare,+octopus+rice,+limpets.&location=ÁKUA+Restaurant,+Funchal,+Madeira" target="_blank">📅 Calendar</a>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:4px"><button class="check-btn" onclick="checkOff(event,'mad2')">☐ Mark done</button></div>
     </div>
   </div>
 
-  <!-- April 3 -->
+  <!-- Apr 3 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon madeira-icon">🌲</div>
-      <div class="day-info">
-        <div class="day-title">North Coast + Lava Pools</div>
-        <div class="day-date">Friday, April 3</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🌲</div>
+      <div class="day-info"><div class="day-title">North Coast + Lava Pools</div><div class="day-date">Friday, April 3</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🌳</div>
-          <div class="tl-content">
-            <div class="tl-time">Morning</div>
-            <div class="tl-title">Fanal Forest</div>
-            <div class="tl-desc">Ancient laurel trees draped in moss and mist. Otherworldly atmosphere — best in the morning when fog rolls through. One of Madeira's most photographed spots.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-afternoon">🌊</div>
-          <div class="tl-content">
-            <div class="tl-time">Midday</div>
-            <div class="tl-title">Véu da Noiva + Seixal Beach</div>
-            <div class="tl-desc">Roadside waterfall viewpoint, then Seixal Beach — black volcanic sand, one of the few accessible beaches on the north coast.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-afternoon">🏊</div>
-          <div class="tl-content">
-            <div class="tl-time">Afternoon</div>
-            <div class="tl-title">Porto Moniz Natural Lava Pools</div>
-            <div class="tl-desc">Natural volcanic rock pools filled by the ocean. Swim in one of the most unique natural pools in the world. Bring a towel and swimsuit.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🚗</div>
-          <div class="tl-content">
-            <div class="tl-time">Evening</div>
-            <div class="tl-title">Return to Funchal</div>
-            <div class="tl-desc">~2.5 hr drive back. Dinner in the city.</div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🌳</div>
+        <div class="tl-body">
+          <div class="tl-time">Morning</div>
+          <div class="tl-title">Fanal Forest</div>
+          <div class="tl-desc">Ancient laurel trees draped in moss and mist. Otherworldly — best when fog rolls through in the morning. One of Madeira's most photographed spots.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Fanal+Forest+Madeira" target="_blank">🗺️ Fanal</a>
           </div>
         </div>
       </div>
+      <div class="tl-item">
+        <div class="tl-dot d-noon">🌊</div>
+        <div class="tl-body">
+          <div class="tl-time">Midday</div>
+          <div class="tl-title">Véu da Noiva + Seixal Beach</div>
+          <div class="tl-desc">Roadside waterfall viewpoint, then Seixal — black volcanic sand beach on the wild north coast.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Véu+da+Noiva+Madeira" target="_blank">🗺️ Véu da Noiva</a>
+            <a class="act" href="https://maps.google.com/?q=Seixal+Beach+Madeira" target="_blank">🗺️ Seixal Beach</a>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-noon">🏊</div>
+        <div class="tl-body">
+          <div class="tl-time">Afternoon</div>
+          <div class="tl-title">Porto Moniz Lava Pools</div>
+          <div class="tl-desc">Natural volcanic rock pools filled by the ocean. Swim in one of the most unique natural pools anywhere. Bring a towel and swimsuit.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Porto+Moniz+Natural+Lava+Pools+Madeira" target="_blank">🗺️ Porto Moniz</a>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:4px"><button class="check-btn" onclick="checkOff(event,'mad3')">☐ Mark done</button></div>
+      <hr class="div"><div style="font-size:11px;opacity:.4">🚗 ~2.5 hrs driving total</div>
     </div>
   </div>
 
-  <!-- April 4 -->
+  <!-- Apr 4 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon madeira-icon">🏄</div>
-      <div class="day-info">
-        <div class="day-title">Canyoneering + Cabo Girão + Poncha</div>
-        <div class="day-date">Saturday, April 4</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🧗</div>
+      <div class="day-info"><div class="day-title">Canyoneering + Cabo Girão + Poncha</div><div class="day-date">Saturday, April 4</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🧗</div>
-          <div class="tl-content">
-            <div class="tl-time">Morning</div>
-            <div class="tl-title">Canyoneering</div>
-            <div class="tl-desc">Intermediate level canyoning adventure — rappelling down waterfalls through volcanic canyons. Get wet, have fun.</div>
-            <a href="https://www.getyourguide.com/madeira-l67/from-funchal-intermediate-level-2-canyoning-adventure-t421109/" target="_blank" class="action-link">🔗 GetYourGuide Link →</a>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🧗</div>
+        <div class="tl-body">
+          <div class="tl-time">Morning</div>
+          <div class="tl-title">Canyoneering</div>
+          <div class="tl-desc">Intermediate canyoning — rappelling down waterfalls through volcanic canyons. You will get wet. You will love it.</div>
+          <div class="actions">
+            <a class="act" href="https://www.getyourguide.com/madeira-l67/from-funchal-intermediate-level-2-canyoning-adventure-t421109/" target="_blank">🎟️ GetYourGuide</a>
+          </div>
+          <div style="margin-top:8px"><button class="check-btn" onclick="checkOff(event,'mad4')">☐ Mark done</button></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🌿</div>
+        <div class="tl-body">
+          <div class="tl-time">Late Morning</div>
+          <div class="tl-title">Levada do Moinho</div>
+          <div class="tl-desc">Easy levada walk through vineyards and banana plantations. Good chill-out after the morning adrenaline.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Levada+do+Moinho+Madeira" target="_blank">🗺️ Map</a>
           </div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🌿</div>
-          <div class="tl-content">
-            <div class="tl-time">Late Morning</div>
-            <div class="tl-title">Levada do Moinho</div>
-            <div class="tl-desc">Short, easy levada walk through vineyards and banana plantations. Good cool-down after the morning adventure.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-noon">🌅</div>
+        <div class="tl-body">
+          <div class="tl-time">Afternoon</div>
+          <div class="tl-title">Cabo Girão Skywalk</div>
+          <div class="tl-desc">One of the highest sea cliffs in Europe. Glass-floor skywalk over a 580m drop straight to the ocean. Not for the weak.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Cabo+Girão+Skywalk+Madeira" target="_blank">🗺️ Cabo Girão</a>
           </div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-afternoon">🌅</div>
-          <div class="tl-content">
-            <div class="tl-time">Afternoon</div>
-            <div class="tl-title">Cabo Girão Skywalk</div>
-            <div class="tl-desc">One of the highest sea cliffs in Europe. Glass-floor skywalk over a 580m drop straight to the ocean. Not for the faint of heart.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🐟</div>
+        <div class="tl-body">
+          <div class="tl-time">Dinner</div>
+          <div class="tl-title">Vila do Peixe</div>
+          <div class="tl-desc">Fresh seafood, oceanfront. Order the espada (black scabbardfish) if you're adventurous.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Vila+do+Peixe+Câmara+de+Lobos+Madeira" target="_blank">🗺️ Vila do Peixe</a>
           </div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🐟</div>
-          <div class="tl-content">
-            <div class="tl-time">Dinner</div>
-            <div class="tl-title">Vila do Peixe</div>
-            <div class="tl-desc">Fresh seafood restaurant — classic Madeira dining. Order the espada (black scabbardfish) if you're feeling adventurous.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🍹</div>
-          <div class="tl-content">
-            <div class="tl-time">After Dinner</div>
-            <div class="tl-title">Rei da Poncha</div>
-            <div class="tl-desc">The best poncha bar on the island. Poncha is Madeira's signature drink — aguardente, honey, lemon. Try a few flavors.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🍹</div>
+        <div class="tl-body">
+          <div class="tl-time">After dinner</div>
+          <div class="tl-title">Rei da Poncha</div>
+          <div class="tl-desc">Best poncha bar on the island. Poncha = aguardente + honey + lemon. Try a few flavors. You won't regret it.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Rei+da+Poncha+Madeira" target="_blank">🗺️ Rei da Poncha</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- April 5 -->
+  <!-- Apr 5 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon madeira-icon">🍷</div>
-      <div class="day-info">
-        <div class="day-title">Wine Tasting Day</div>
-        <div class="day-date">Sunday, April 5</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🍷</div>
+      <div class="day-info"><div class="day-title">Wine Tasting Day</div><div class="day-date">Sunday, April 5</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">☕</div>
-          <div class="tl-content">
-            <div class="tl-time">Morning</div>
-            <div class="tl-title">Relax in Funchal</div>
-            <div class="tl-desc">Sleep in. Slow morning, coffee, stroll the waterfront. Earned it.</div>
-          </div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">☕</div>
+        <div class="tl-body">
+          <div class="tl-time">Morning</div>
+          <div class="tl-title">Rest & recharge</div>
+          <div class="tl-desc">Slow morning. Coffee, stroll the waterfront. You've earned it.</div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-afternoon">🍷</div>
-          <div class="tl-content">
-            <div class="tl-time">3:00 PM</div>
-            <div class="tl-title">Wine Tasting — Vinhos Barbeito</div>
-            <div class="tl-desc">Historic Madeira wine producer. Taste the real thing — aged Madeira wines are unlike anything else. Book in advance if not already confirmed.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-noon">🍷</div>
+        <div class="tl-body">
+          <div class="tl-time">3:00 PM</div>
+          <div class="tl-title">Wine Tasting — Vinhos Barbeito</div>
+          <div class="tl-desc">Historic Madeira wine producer. Aged Madeira wines are unlike anything else. Unique to this island.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Vinhos+Barbeito+Madeira" target="_blank">🗺️ Barbeito</a>
+            <a class="act" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wine+Tasting+at+Vinhos+Barbeito&dates=20260405T140000Z/20260405T160000Z&details=Madeira+wine+tasting+at+Vinhos+Barbeito.&location=Vinhos+Barbeito,+Madeira" target="_blank">📅 Calendar</a>
           </div>
+          <div style="margin-top:8px"><button class="check-btn" onclick="checkOff(event,'mad5')">☐ Mark done</button></div>
         </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🌆</div>
-          <div class="tl-content">
-            <div class="tl-time">Evening</div>
-            <div class="tl-title">Dinner in Funchal</div>
-            <div class="tl-desc">Chill evening in the city. Last chance for espetada (beef skewer on a laurel stick).</div>
-          </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🌆</div>
+        <div class="tl-body">
+          <div class="tl-time">Evening</div>
+          <div class="tl-title">Dinner in Funchal</div>
+          <div class="tl-desc">Last chance for espetada (beef skewer on a laurel stick). Classic Madeira.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- April 6 -->
+  <!-- Apr 6 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon madeira-icon">🎨</div>
-      <div class="day-info">
-        <div class="day-title">Funchal Culture Day</div>
-        <div class="day-date">Monday, April 6</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">🎨</div>
+      <div class="day-info"><div class="day-title">Funchal Culture Day</div><div class="day-date">Monday, April 6</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🎨</div>
-          <div class="tl-content">
-            <div class="tl-time">Morning</div>
-            <div class="tl-title">Rua de Santa Maria</div>
-            <div class="tl-desc">Funchal's famous painted-door street. Every door is a piece of art — wander through and explore the old town.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-morning">🌺</div>
-          <div class="tl-content">
-            <div class="tl-time">Late Morning</div>
-            <div class="tl-title">Monte Palace Tropical Garden</div>
-            <div class="tl-desc">One of the most beautiful gardens in Europe. Exotic plants, tile art, ponds, peacocks. Take the cable car up (Teleférico do Funchal) for a scenic ride and views.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-afternoon">⚓</div>
-          <div class="tl-content">
-            <div class="tl-time">Afternoon</div>
-            <div class="tl-title">Marina + Shopping</div>
-            <div class="tl-desc">Stroll the marina promenade. Mercado dos Lavradores (covered market) for local goods. Last chance for souvenirs.</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="tl-dot tl-evening">🌅</div>
-          <div class="tl-content">
-            <div class="tl-time">Late Afternoon</div>
-            <div class="tl-title">Beach Club or Spa</div>
-            <div class="tl-desc">End on a high note. Lido do Funchal for a swim or find a beachside bar for sundowners.</div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🎨</div>
+        <div class="tl-body">
+          <div class="tl-time">Morning</div>
+          <div class="tl-title">Rua de Santa Maria</div>
+          <div class="tl-desc">Funchal's famous painted-door street. Every door is a piece of art. Wander, explore the old town.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Rua+de+Santa+Maria+Funchal+Madeira" target="_blank">🗺️ Rua de Santa Maria</a>
           </div>
         </div>
       </div>
+      <div class="tl-item">
+        <div class="tl-dot d-morn">🌺</div>
+        <div class="tl-body">
+          <div class="tl-time">Late Morning</div>
+          <div class="tl-title">Monte Palace Tropical Garden</div>
+          <div class="tl-desc">One of the most beautiful gardens in Europe. Exotic plants, tile art, ponds, peacocks. Take the cable car up for the views.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Monte+Palace+Tropical+Garden+Funchal" target="_blank">🗺️ Monte Palace</a>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-noon">⚓</div>
+        <div class="tl-body">
+          <div class="tl-time">Afternoon</div>
+          <div class="tl-title">Marina + Shopping</div>
+          <div class="tl-desc">Stroll the marina, Mercado dos Lavradores for local goods. Last chance for souvenirs.</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Funchal+Marina+Madeira" target="_blank">🗺️ Marina</a>
+            <a class="act" href="https://maps.google.com/?q=Mercado+dos+Lavradores+Funchal" target="_blank">🗺️ Mercado</a>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot d-eve">🌅</div>
+        <div class="tl-body">
+          <div class="tl-time">Late Afternoon</div>
+          <div class="tl-title">Beach club or spa</div>
+          <div class="tl-desc">End on a high note. Lido do Funchal for a swim or find a beachside bar for sundowners. Last night!</div>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Lido+Funchal+Madeira" target="_blank">🗺️ Lido Funchal</a>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:4px"><button class="check-btn" onclick="checkOff(event,'mad6')">☐ Mark done</button></div>
     </div>
   </div>
 
-  <!-- April 7 — departure -->
+  <!-- Apr 7 -->
   <div class="day-card" onclick="toggleDay(this)">
-    <div class="day-header">
-      <div class="day-icon madeira-icon">✈️</div>
-      <div class="day-info">
-        <div class="day-title">Departure Day</div>
-        <div class="day-date">Tuesday, April 7</div>
-      </div>
-      <div class="day-chevron">▼</div>
+    <div class="day-head">
+      <div class="day-ico">✈️</div>
+      <div class="day-info"><div class="day-title">Departure</div><div class="day-date">Tuesday, April 7</div></div>
+      <div class="day-chev">▼</div>
     </div>
     <div class="day-body">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="tl-dot tl-travel">🌙</div>
-          <div class="tl-content">
-            <div class="tl-time">Early morning</div>
-            <div class="tl-title">Pack & Head to Airport</div>
-            <div class="tl-desc">Flight departs <strong>5:00 AM</strong>. Be at airport by <strong>3:00 AM</strong>. Pack the night before.</div>
-            <span class="badge badge-needed">⚠️ 5 AM Flight</span>
+      <div class="tl-item">
+        <div class="tl-dot d-move">🌙</div>
+        <div class="tl-body">
+          <div class="tl-time">Middle of the night</div>
+          <div class="tl-title">Head to the airport</div>
+          <div class="tl-desc">Flight departs <strong>5:00 AM</strong>. Be at airport by <strong>3:00 AM</strong>. Pack everything the night before.</div>
+          <span class="badge b-warn">⚠️ 5 AM flight</span>
+          <div class="actions">
+            <a class="act" href="https://maps.google.com/?q=Funchal+Airport+Madeira" target="_blank">🗺️ Airport</a>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>
 
-<div class="footer">Made with ❤️ for the crew · Norway & Madeira 2026</div>
+<!-- ══════════ PACKING ══════════ -->
+<div class="section" id="pack">
+  <div class="sec-head"><h2>🎒 Packing List</h2><p>Tap items to check them off</p></div>
+
+  <!-- Norway -->
+  <div class="pack-group">
+    <h3>🌌 Norway — Arctic Essentials</h3>
+
+    <div class="pack-item" onclick="togglePack(this,'p-n1')">
+      <div class="pack-check" id="p-n1">✓</div>
+      <div class="pack-icon">🧣</div>
+      <div class="pack-name">Thermal base layers × 3 (top + bottom)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n2')">
+      <div class="pack-check" id="p-n2">✓</div>
+      <div class="pack-icon">🧥</div>
+      <div class="pack-name">Mid-layer fleece or down jacket</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n3')">
+      <div class="pack-check" id="p-n3">✓</div>
+      <div class="pack-icon">🧥</div>
+      <div class="pack-name">Waterproof outer shell / parka</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n4')">
+      <div class="pack-check" id="p-n4">✓</div>
+      <div class="pack-icon">👖</div>
+      <div class="pack-name">Waterproof snow pants</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n5')">
+      <div class="pack-check" id="p-n5">✓</div>
+      <div class="pack-icon">🧤</div>
+      <div class="pack-name">Waterproof gloves / mittens</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n6')">
+      <div class="pack-check" id="p-n6">✓</div>
+      <div class="pack-icon">🧢</div>
+      <div class="pack-name">Beanie + balaclava / face mask</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n7')">
+      <div class="pack-check" id="p-n7">✓</div>
+      <div class="pack-icon">👟</div>
+      <div class="pack-name">Waterproof insulated snow boots</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n8')">
+      <div class="pack-check" id="p-n8">✓</div>
+      <div class="pack-icon">🧦</div>
+      <div class="pack-name">Wool socks × 5</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n9')">
+      <div class="pack-check" id="p-n9">✓</div>
+      <div class="pack-icon">🔥</div>
+      <div class="pack-name">Hand warmers (pack of 10+)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n10')">
+      <div class="pack-check" id="p-n10">✓</div>
+      <div class="pack-icon">🩱</div>
+      <div class="pack-name">Swimsuit (for the Arctic sauna plunge)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n11')">
+      <div class="pack-check" id="p-n11">✓</div>
+      <div class="pack-icon">📸</div>
+      <div class="pack-name">Tripod (for northern lights photography)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-n12')">
+      <div class="pack-check" id="p-n12">✓</div>
+      <div class="pack-icon">🔋</div>
+      <div class="pack-name">Power bank (cold drains batteries fast)</div>
+    </div>
+  </div>
+
+  <!-- Madeira -->
+  <div class="pack-group">
+    <h3>🌊 Madeira — Hiking & Beach</h3>
+
+    <div class="pack-item" onclick="togglePack(this,'p-m1')">
+      <div class="pack-check" id="p-m1">✓</div>
+      <div class="pack-icon">👟</div>
+      <div class="pack-name">Waterproof hiking boots</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-m2')">
+      <div class="pack-check" id="p-m2">✓</div>
+      <div class="pack-icon">🔦</div>
+      <div class="pack-name">Headlamp (Caldeirão Verde tunnels — critical!)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-m3')">
+      <div class="pack-check" id="p-m3">✓</div>
+      <div class="pack-icon">🩱</div>
+      <div class="pack-name">Swimsuit (Porto Moniz lava pools)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-m4')">
+      <div class="pack-check" id="p-m4">✓</div>
+      <div class="pack-icon">🌞</div>
+      <div class="pack-name">Sunscreen SPF 50+</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-m5')">
+      <div class="pack-check" id="p-m5">✓</div>
+      <div class="pack-icon">🎒</div>
+      <div class="pack-name">Day pack / backpack</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-m6')">
+      <div class="pack-check" id="p-m6">✓</div>
+      <div class="pack-icon">💧</div>
+      <div class="pack-name">Reusable water bottle</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-m7')">
+      <div class="pack-check" id="p-m7">✓</div>
+      <div class="pack-icon">🧥</div>
+      <div class="pack-name">Light rain jacket (mornings can be misty)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-m8')">
+      <div class="pack-check" id="p-m8">✓</div>
+      <div class="pack-icon">🏖️</div>
+      <div class="pack-name">Towel (lava pools + beach days)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-m9')">
+      <div class="pack-check" id="p-m9">✓</div>
+      <div class="pack-icon">👓</div>
+      <div class="pack-name">Sunglasses</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-m10')">
+      <div class="pack-check" id="p-m10">✓</div>
+      <div class="pack-icon">🧦</div>
+      <div class="pack-name">Hiking socks × 4</div>
+    </div>
+  </div>
+
+  <!-- General -->
+  <div class="pack-group">
+    <h3>✈️ Both Trips — General</h3>
+
+    <div class="pack-item" onclick="togglePack(this,'p-g1')">
+      <div class="pack-check" id="p-g1">✓</div>
+      <div class="pack-icon">🛂</div>
+      <div class="pack-name">Passport (valid 6+ months)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-g2')">
+      <div class="pack-check" id="p-g2">✓</div>
+      <div class="pack-icon">🔌</div>
+      <div class="pack-name">EU travel adapter (Type C/F)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-g3')">
+      <div class="pack-check" id="p-g3">✓</div>
+      <div class="pack-icon">💊</div>
+      <div class="pack-name">Basic meds (ibuprofen, Pepto, antihistamine)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-g4')">
+      <div class="pack-check" id="p-g4">✓</div>
+      <div class="pack-icon">📱</div>
+      <div class="pack-name">Download offline maps before leaving</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-g5')">
+      <div class="pack-check" id="p-g5">✓</div>
+      <div class="pack-icon">💶</div>
+      <div class="pack-name">Some cash in euros (for tips, small spots)</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-g6')">
+      <div class="pack-check" id="p-g6">✓</div>
+      <div class="pack-icon">📄</div>
+      <div class="pack-name">Print/save all booking confirmations</div>
+    </div>
+    <div class="pack-item" onclick="togglePack(this,'p-g7')">
+      <div class="pack-check" id="p-g7">✓</div>
+      <div class="pack-icon">🛡️</div>
+      <div class="pack-name">Travel insurance docs</div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">Made with ❤️ for the crew · Norway & Madeira 2026</div>
 
 <script>
-// ── Weather codes → emoji + description
-const WMO = {
-  0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',
-  45:'Foggy',48:'Icy fog',
-  51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',
-  61:'Light rain',63:'Rain',65:'Heavy rain',
-  71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',
-  80:'Rain showers',81:'Showers',82:'Violent showers',
-  85:'Snow showers',86:'Heavy snow showers',
-  95:'Thunderstorm',96:'Thunderstorm+hail',99:'Thunderstorm+heavy hail'
-};
-const WMO_ICON = {
-  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',
-  45:'🌫️',48:'🌫️',
-  51:'🌦️',53:'🌦️',55:'🌧️',
-  61:'🌧️',63:'🌧️',65:'🌧️',
-  71:'🌨️',73:'❄️',75:'❄️',77:'❄️',
-  80:'🌦️',81:'🌧️',82:'⛈️',
-  85:'🌨️',86:'🌨️',
-  95:'⛈️',96:'⛈️',99:'⛈️'
+// ── WMO weather codes
+const WMO = {0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Icy fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',80:'Rain showers',81:'Showers',82:'Violent showers',85:'Snow showers',86:'Heavy snow showers',95:'Thunderstorm',96:'Thunderstorm',99:'Thunderstorm'};
+const WMO_ICO = {0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'❄️',75:'❄️',77:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',85:'🌨️',86:'🌨️',95:'⛈️',96:'⛈️',99:'⛈️'};
+
+const LOCS = {
+  norway:  {lat:69.65, lon:18.96,  tz:'Europe/Oslo',        city:'Tromsø, Norway'},
+  madeira: {lat:32.67, lon:-16.92, tz:'Atlantic/Madeira',   city:'Funchal, Madeira'}
 };
 
-const LOCATIONS = {
-  norway: { lat: 69.65, lon: 18.96, tz: 'Europe/Oslo',      label: 'Tromsø, Norway' },
-  madeira:{ lat: 32.67, lon:-16.92, tz: 'Atlantic/Madeira', label: 'Funchal, Madeira' }
-};
+let currentSection = 'norway';
 
-async function loadWeather(section) {
-  const loc = LOCATIONS[section];
-  try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}`+
-      `&current=temperature_2m,weathercode,windspeed_10m`+
-      `&daily=temperature_2m_max,temperature_2m_min`+
-      `&timezone=${encodeURIComponent(loc.tz)}&temperature_unit=fahrenheit&forecast_days=1`;
-    const r = await fetch(url);
-    const d = await r.json();
-    const c = d.current;
-    const dy = d.daily;
-    const temp  = Math.round(c.temperature_2m);
-    const code  = c.weathercode;
-    const wind  = Math.round(c.windspeed_10m);
-    const hi    = Math.round(dy.temperature_2m_max[0]);
-    const lo    = Math.round(dy.temperature_2m_min[0]);
-    const desc  = WMO[code] || 'Unknown';
-    const icon  = WMO_ICON[code] || '🌡️';
-    document.getElementById('weather-city').textContent = `Weather · ${loc.label}`;
-    document.getElementById('weather-icon').textContent = icon;
-    document.getElementById('weather-temp').textContent = `${temp}°F`;
-    document.getElementById('weather-desc').textContent = `${desc} · H:${hi}° L:${lo}° · Wind ${wind} km/h`;
-  } catch(e) {
-    document.getElementById('weather-desc').textContent = 'Could not load weather';
-  }
+// ── TAB SWITCH
+function show(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.className = 'tab';
+    if (i===0 && name==='norway')  t.className='tab on-n';
+    if (i===1 && name==='madeira') t.className='tab on-m';
+    if (i===2 && name==='pack')    t.className='tab on-m';
+  });
+  document.body.className = (name==='madeira'||name==='pack') ? 'madeira' : '';
+  currentSection = name;
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (name==='norway'||name==='madeira') loadWeather(name);
 }
 
+// ── TOGGLE DAY CARD
+function toggleDay(card) { card.classList.toggle('open'); }
+
+// ── CHECK OFF ACTIVITY
+const NOR_TOTAL = 6, MAD_TOTAL = 8;
+function checkOff(e, id) {
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  const checked = btn.classList.toggle('done');
+  localStorage.setItem('check_'+id, checked ? '1' : '0');
+  btn.textContent = checked ? '✓ Done' : '☐ Mark done';
+  updateProgress();
+}
+function restoreChecks() {
+  document.querySelectorAll('.check-btn').forEach(btn => {
+    const id = btn.getAttribute('onclick').match(/'([^']+)'\)/)[1];
+    if (localStorage.getItem('check_'+id)==='1') {
+      btn.classList.add('done');
+      btn.textContent = '✓ Done';
+    }
+  });
+  updateProgress();
+}
+function updateProgress() {
+  const norIds = ['nor1','nor2','nor3','nor4','nor5'];
+  const madIds = ['mad1','mad2','mad3','mad4','mad5','mad6'];
+  const norDone = norIds.filter(id => localStorage.getItem('check_'+id)==='1').length;
+  const madDone = madIds.filter(id => localStorage.getItem('check_'+id)==='1').length;
+  document.getElementById('nor-prog').style.width = (norDone/NOR_TOTAL*100)+'%';
+  document.getElementById('mad-prog').style.width = (madDone/MAD_TOTAL*100)+'%';
+  document.getElementById('nor-prog-label').textContent = `${norDone} of ${NOR_TOTAL} activities done`;
+  document.getElementById('mad-prog-label').textContent = `${madDone} of ${MAD_TOTAL} activities done`;
+}
+
+// ── PACKING TOGGLE
+function togglePack(item, id) {
+  item.classList.toggle('packed');
+  localStorage.setItem('pack_'+id, item.classList.contains('packed') ? '1' : '0');
+}
+function restorePack() {
+  document.querySelectorAll('.pack-item').forEach(item => {
+    const id = item.getAttribute('onclick').match(/'([^']+)'\)/)[1];
+    if (localStorage.getItem('pack_'+id)==='1') item.classList.add('packed');
+  });
+}
+
+// ── COUNTDOWN
+const DEPART = new Date('2026-03-24T21:00:00-04:00');
+function tick() {
+  const diff = DEPART - Date.now();
+  if (diff <= 0) {
+    document.getElementById('countdown').innerHTML = '<div class="cd-block" style="min-width:160px"><div class="cd-num" style="font-size:20px">🛫 Let\'s go!</div></div>';
+    return;
+  }
+  const d = Math.floor(diff/864e5);
+  const h = Math.floor((diff%864e5)/36e5);
+  const m = Math.floor((diff%36e5)/6e4);
+  const s = Math.floor((diff%6e4)/1e3);
+  document.getElementById('cd-d').textContent = d;
+  document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+}
+tick(); setInterval(tick, 1000);
+
+// ── WEATHER
+async function loadWeather(section) {
+  const loc = LOCS[section];
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current=temperature_2m,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=${encodeURIComponent(loc.tz)}&temperature_unit=fahrenheit&forecast_days=1`;
+    const d = await fetch(url).then(r=>r.json());
+    const c = d.current, dy = d.daily;
+    const temp = Math.round(c.temperature_2m), code = c.weathercode;
+    const hi = Math.round(dy.temperature_2m_max[0]), lo = Math.round(dy.temperature_2m_min[0]);
+    document.getElementById('wx-city').textContent = 'Weather · '+loc.city;
+    document.getElementById('wx-icon').textContent = WMO_ICO[code]||'🌡️';
+    document.getElementById('wx-temp').textContent = temp+'°F';
+    document.getElementById('wx-desc').textContent = (WMO[code]||'') + ` · H:${hi}° L:${lo}°`;
+  } catch { document.getElementById('wx-desc').textContent = 'Weather unavailable'; }
+}
+
+// ── AURORA (KP)
 async function loadAurora() {
   try {
-    // NOAA 3-day KP forecast
-    const r = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json');
-    const data = await r.json();
-    // data[0] = headers, rest = [time, kp, observed, noaa_scale]
+    const data = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json').then(r=>r.json());
     const now = Date.now();
-    // Find the nearest upcoming value
     let kp = 0;
-    for (let i = 1; i < data.length; i++) {
-      const t = new Date(data[i][0] + 'Z').getTime();
+    for (let i=1; i<data.length; i++) {
+      const t = new Date(data[i][0]+'Z').getTime();
       if (t >= now - 3*3600*1000) { kp = parseFloat(data[i][1]); break; }
     }
     kp = Math.max(0, Math.min(9, kp));
-    const kpRound = Math.round(kp * 10) / 10;
-
-    let label, segClass;
-    if (kp < 3)      { label = 'Low — not visible tonight'; segClass = 'active-low'; }
-    else if (kp < 5) { label = 'Possible — watch the sky! 👀'; segClass = 'active-mid'; }
-    else if (kp < 7) { label = 'ACTIVE — go outside now! 🎉'; segClass = 'active-high'; }
-    else             { label = 'STORM — incredible aurora! 🚨'; segClass = 'active-high'; }
-
-    document.getElementById('kp-value').textContent = `KP ${kpRound}`;
-    document.getElementById('kp-label').textContent = label;
-
-    // Fill bar segments
+    const kpR = Math.round(kp*10)/10;
+    let txt, cls;
+    if (kp<3)      { txt='Low — not visible tonight'; cls='kp-low'; }
+    else if (kp<5) { txt='Possible — watch the sky! 👀'; cls='kp-mid'; }
+    else if (kp<7) { txt='ACTIVE — go outside now! 🎉'; cls='kp-high'; }
+    else           { txt='STORM — epic aurora! 🚨'; cls='kp-high'; }
+    document.getElementById('kp-val').textContent = 'KP '+kpR;
+    document.getElementById('kp-txt').textContent = txt;
     const filled = Math.round(kp);
-    for (let i = 0; i < 9; i++) {
-      const seg = document.getElementById('ks'+i);
-      if (i < filled) seg.className = `kp-seg ${segClass}`;
-      else seg.className = 'kp-seg';
+    for (let i=0;i<9;i++) {
+      document.getElementById('s'+i).className = 'kp-seg'+(i<filled?' '+cls:'');
     }
-  } catch(e) {
-    document.getElementById('kp-label').textContent = 'Aurora data unavailable';
-  }
+  } catch { document.getElementById('kp-txt').textContent = 'Aurora data unavailable'; }
 }
 
-function showSection(name) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById(name).classList.add('active');
-
-  const tabs = document.querySelectorAll('.tab');
-  tabs[0].className = 'tab' + (name === 'norway' ? ' active-norway' : '');
-  tabs[1].className = 'tab' + (name === 'madeira' ? ' active-madeira' : '');
-
-  document.body.className = name === 'madeira' ? 'madeira-mode' : '';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  loadWeather(name);
-}
-
-function toggleDay(card) {
-  card.classList.toggle('open');
-}
-
-// Auto-detect trip leg + load widgets
+// ── INIT
 (function() {
   const now = new Date();
-  const month = now.getMonth() + 1;
-  const day = now.getDate();
-  const isMadeira = (month === 3 && day >= 31) || (month === 4 && day <= 7);
-  const section = isMadeira ? 'madeira' : 'norway';
-  if (isMadeira) showSection('madeira');
-  // Load widgets
-  loadWeather(section);
+  const m = now.getMonth()+1, d = now.getDate();
+  const isMadeira = (m===3&&d>=31)||(m===4&&d<=7);
+  if (isMadeira) show('madeira');
+  else { loadWeather('norway'); }
   loadAurora();
+  restoreChecks();
+  restorePack();
 })();
 </script>
 </body>
