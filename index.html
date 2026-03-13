@@ -66,6 +66,8 @@ body::after{
 }
 body.on-norway  #norway-bg { opacity:.07; }
 body.on-madeira #madeira-bg { opacity:.08; }
+body.on-madeira #aurora-w   { display: none; }
+body.on-madeira #wx-w       { max-width: 100%; flex: unset; width: 100%; }
 
 /* ── PAGE WRAPPER ── */
 .page{position:relative;z-index:1;}
@@ -145,6 +147,9 @@ body.on-madeira #madeira-bg { opacity:.08; }
   margin-bottom:0;
 }
 @media(max-width:480px){.widgets{grid-template-columns:1fr;}}
+.widgets:has(.aurora-w[style*="none"]), body.on-madeira .widgets {
+  grid-template-columns: 1fr;
+}
 .widget{
   padding:18px 20px;
   border-radius:2px;
@@ -212,9 +217,9 @@ body.on-madeira #madeira-bg { opacity:.08; }
 }
 .tab{
   font-family:var(--serif);
-  font-size:14px;font-weight:400;
+  font-size:17px;font-weight:400;
   letter-spacing:.3px;
-  padding:14px 20px 12px;
+  padding:18px 26px 16px;
   cursor:pointer;
   border:none;background:transparent;
   color:var(--stone);
@@ -230,6 +235,20 @@ body.on-madeira #madeira-bg { opacity:.08; }
   font-style:normal;
   font-weight:700;
 }
+/* Madeira/Portugal warm theme overrides */
+body.on-madeira { background: #100C07; }
+body.on-madeira .tabs { background: rgba(16,12,7,.92); }
+body.on-madeira .tab.active { color: #E8922A; border-bottom-color: #E8922A; }
+body.on-madeira .prog-fill { background: #E8922A; }
+body.on-madeira .prog-count { color: #E8922A; }
+body.on-madeira .act:hover { border-color: #E8922A; color: #E8922A; }
+body.on-madeira .check-btn:hover { border-color: #E8922A; color: #E8922A; }
+body.on-madeira .check-btn.done { border-color: rgba(232,146,42,.35); color: rgba(232,146,42,.7); }
+body.on-madeira .day-card.featured .day-head { background: linear-gradient(135deg,#221405,#1e1108); box-shadow: 0 0 0 1px rgba(232,146,42,.2),var(--shadow-md); }
+body.on-madeira .day-card.featured .day-title { color: #E8922A; }
+body.on-madeira .hero h1 em { color: #E8922A; }
+body.on-madeira .aurora-w { display: none; }
+body.on-madeira #wx-w { grid-column: 1 / -1; max-width: 320px; }
 
 /* ── MAIN CONTENT ── */
 .section{display:none;padding:0 28px 100px;max-width:760px;margin:0 auto;}
@@ -538,7 +557,7 @@ body.on-madeira #madeira-bg { opacity:.08; }
 <!-- ── TABS ── -->
 <div class="tabs">
   <button class="tab active" onclick="show('norway')">Norway</button>
-  <button class="tab"        onclick="show('madeira')">Madeira</button>
+  <button class="tab"        onclick="show('madeira')">Portugal</button>
   <button class="tab"        onclick="show('pack')">Packing</button>
 </div>
 
@@ -849,7 +868,7 @@ body.on-madeira #madeira-bg { opacity:.08; }
 <!-- ══════════════════════════ MADEIRA ══════════════════════════ -->
 <div class="section" id="madeira">
   <div class="sec-head fade-in" style="animation-delay:.05s">
-    <h2>Funchal,<br>Madeira</h2>
+    <h2>Funchal,<br>Portugal</h2>
     <p>Seven days. Volcanic cliffs, jungle hikes, birthday dinner.</p>
   </div>
 
