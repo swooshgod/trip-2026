@@ -483,6 +483,22 @@ body.on-madeira #wx-w { grid-column: 1 / -1; max-width: 320px; }
 }
 .fade-in{opacity:0;animation:fadeUp .5s ease-out forwards;}
 
+/* ── RESTAURANT ITEMS ── */
+.rest-item{
+  padding:14px 16px;margin-bottom:6px;
+  background:var(--surface);
+  box-shadow:var(--shadow-sm);
+  border-left:2px solid var(--border);
+  transition:border-color .2s, transform .12s;
+}
+.rest-item:hover{border-left-color:var(--amber);transform:translateX(2px);}
+body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
+.rest-name{
+  font-family:var(--serif);font-size:15px;font-weight:700;
+  color:var(--cream);margin-bottom:4px;
+}
+.rest-desc{font-size:12px;color:var(--stone);line-height:1.6;margin-bottom:0;}
+
 /* ── FOOTER ── */
 .foot{
   text-align:center;padding:32px;
@@ -558,7 +574,7 @@ body.on-madeira #wx-w { grid-column: 1 / -1; max-width: 320px; }
 <div class="tabs">
   <button class="tab active" onclick="show('norway')">Norway</button>
   <button class="tab"        onclick="show('madeira')">Portugal</button>
-  <button class="tab"        onclick="show('pack')">Packing</button>
+  <button class="tab"        onclick="show('pack')">Food</button>
 </div>
 
 <!-- ══════════════════════════ NORWAY ══════════════════════════ -->
@@ -841,6 +857,18 @@ body.on-madeira #wx-w { grid-column: 1 / -1; max-width: 320px; }
     <h3>Norway → Madeira</h3>
     <p>Tuesday, March 31 &nbsp;·&nbsp; Depart 8:20 AM &nbsp;·&nbsp; Arrive 4:25 PM</p>
     <p style="margin-top:6px;font-size:11px;opacity:.4">Pack everything the night before.</p>
+  </div>
+
+  <!-- OFFLINE MAPS -->
+  <div class="section-divider"><span class="section-divider-label">Offline Maps</span></div>
+  <div class="note fade-in" style="animation-delay:.38s">
+    <strong>Before you fly:</strong> Open each link below in Google Maps and tap <em>Download</em> to save offline. Works without WiFi or data.
+    <div class="actions" style="margin-top:10px">
+      <a class="act" href="https://maps.google.com/?q=Tromsø,+Norway&z=12" target="_blank">↓ Tromsø city</a>
+      <a class="act" href="https://maps.google.com/?q=Ersfjordbotn,+Norway&z=11" target="_blank">↓ Ersfjordbotn</a>
+      <a class="act" href="https://maps.google.com/?q=Kvaløya,+Norway&z=11" target="_blank">↓ Kvaløya island</a>
+      <a class="act" href="https://maps.google.com/?q=Tromsø+Villmarkssenter&z=12" target="_blank">↓ Dog sled area</a>
+    </div>
   </div>
 
   <!-- AURORA TIPS -->
@@ -1202,6 +1230,18 @@ body.on-madeira #wx-w { grid-column: 1 / -1; max-width: 320px; }
     </div>
   </div>
 
+  <!-- OFFLINE MAPS PORTUGAL -->
+  <div class="section-divider"><span class="section-divider-label">Offline Maps</span></div>
+  <div class="note fade-in" style="animation-delay:.35s">
+    <strong>Before you land:</strong> Open each link in Google Maps and tap <em>Download</em> to save the area offline.
+    <div class="actions" style="margin-top:10px">
+      <a class="act" href="https://maps.google.com/?q=Funchal,+Madeira&z=13" target="_blank">↓ Funchal city</a>
+      <a class="act" href="https://maps.google.com/?q=Pico+do+Arieiro,+Madeira&z=12" target="_blank">↓ Mountain trails</a>
+      <a class="act" href="https://maps.google.com/?q=Porto+Moniz,+Madeira&z=13" target="_blank">↓ North coast</a>
+      <a class="act" href="https://maps.google.com/?q=Ponta+de+São+Lourenço,+Madeira&z=13" target="_blank">↓ East coast</a>
+    </div>
+  </div>
+
   <!-- APR 7 -->
   <div class="day-card fade-in" style="animation-delay:.33s" onclick="toggleDay(this)">
     <div class="day-head">
@@ -1229,52 +1269,146 @@ body.on-madeira #wx-w { grid-column: 1 / -1; max-width: 320px; }
   </div>
 </div>
 
-<!-- ══════════════════════════ PACKING ══════════════════════════ -->
+<!-- ══════════════════════════ FOOD ══════════════════════════ -->
 <div class="section" id="pack">
   <div class="sec-head fade-in" style="animation-delay:.05s">
-    <h2>Packing List</h2>
-    <p>Tap to check items off. Saved to your device.</p>
+    <h2>Where to Eat</h2>
+    <p>Best spots across both destinations.</p>
   </div>
+
+  <!-- TROMSØ FOOD -->
+  <div class="section-divider fade-in" style="animation-delay:.08s"><span class="section-divider-label">Tromsø, Norway</span></div>
 
   <div class="pack-group fade-in" style="animation-delay:.1s">
-    <div class="pack-group-title">Norway — Arctic</div>
-    <div class="pack-item" onclick="togglePack(this,'p-n1')"><div class="pack-check" id="p-n1">✓</div><div class="pack-name">Thermal base layers × 3 (top + bottom)</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n2')"><div class="pack-check" id="p-n2">✓</div><div class="pack-name">Mid-layer fleece or down jacket</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n3')"><div class="pack-check" id="p-n3">✓</div><div class="pack-name">Waterproof outer shell / heavy parka</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n4')"><div class="pack-check" id="p-n4">✓</div><div class="pack-name">Waterproof snow pants</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n5')"><div class="pack-check" id="p-n5">✓</div><div class="pack-name">Waterproof insulated gloves / mittens</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n6')"><div class="pack-check" id="p-n6">✓</div><div class="pack-name">Beanie + balaclava + neck gaiter</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n7')"><div class="pack-check" id="p-n7">✓</div><div class="pack-name">Waterproof insulated snow boots</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n8')"><div class="pack-check" id="p-n8">✓</div><div class="pack-name">Wool socks × 5</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n9')"><div class="pack-check" id="p-n9">✓</div><div class="pack-name">Hand warmers × 10+</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n10')"><div class="pack-check" id="p-n10">✓</div><div class="pack-name">Swimsuit (Arctic sauna plunge)</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n11')"><div class="pack-check" id="p-n11">✓</div><div class="pack-name">Tripod (northern lights photography)</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-n12')"><div class="pack-check" id="p-n12">✓</div><div class="pack-name">Power bank — cold kills batteries fast</div></div>
+    <div class="pack-group-title">Breakfast</div>
+    <div class="rest-item">
+      <div class="rest-name">Smørtorget Kafé</div>
+      <div class="rest-desc">Cozy local café right in the city center. Great coffee, fresh pastries, and that hygge morning vibe.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Smørtorget+Kafé+Tromsø" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Mathallen Tromsø</div>
+      <div class="rest-desc">Food hall with multiple vendors — good for a local breakfast spread with Norwegian breads and cured fish.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Mathallen+Tromsø" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Risø Urban Farm Café</div>
+      <div class="rest-desc">Health-forward café with fresh bowls, eggs, and great coffee. Light and clean before a big activity day.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Risø+Urban+Farm+Tromsø" target="_blank">Map</a></div>
+    </div>
   </div>
 
-  <div class="pack-group fade-in" style="animation-delay:.15s">
-    <div class="pack-group-title">Madeira — Hiking &amp; Beach</div>
-    <div class="pack-item" onclick="togglePack(this,'p-m1')"><div class="pack-check" id="p-m1">✓</div><div class="pack-name">Waterproof hiking boots</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-m2')"><div class="pack-check" id="p-m2">✓</div><div class="pack-name">Headlamp — critical for Caldeirão Verde tunnels</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-m3')"><div class="pack-check" id="p-m3">✓</div><div class="pack-name">Swimsuit (Porto Moniz lava pools)</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-m4')"><div class="pack-check" id="p-m4">✓</div><div class="pack-name">Sunscreen SPF 50+</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-m5')"><div class="pack-check" id="p-m5">✓</div><div class="pack-name">Day pack / backpack</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-m6')"><div class="pack-check" id="p-m6">✓</div><div class="pack-name">Reusable water bottle</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-m7')"><div class="pack-check" id="p-m7">✓</div><div class="pack-name">Light rain jacket (mornings can be misty)</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-m8')"><div class="pack-check" id="p-m8">✓</div><div class="pack-name">Towel (lava pools + beach)</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-m9')"><div class="pack-check" id="p-m9">✓</div><div class="pack-name">Sunglasses</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-m10')"><div class="pack-check" id="p-m10">✓</div><div class="pack-name">Hiking socks × 4</div></div>
+  <div class="pack-group fade-in" style="animation-delay:.13s">
+    <div class="pack-group-title">Lunch</div>
+    <div class="rest-item">
+      <div class="rest-name">Emma's Dream Kitchen</div>
+      <div class="rest-desc">Sami-inspired Nordic cuisine — the most talked-about restaurant in Tromsø. Reindeer, Arctic char, local herbs. Go here.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Emmas+Drømmekjøkken+Tromsø" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Bardus Bistro</div>
+      <div class="rest-desc">Relaxed bistro with a great lunch menu. Local ingredients, open kitchen, unpretentious. Good for a midday refuel.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Bardus+Bistro+Tromsø" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Kystens Arv</div>
+      <div class="rest-desc">Traditional Norwegian fisherman-style lunch. Dried fish, fish soup, salted cod. As authentic as it gets.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Kystens+Arv+Tromsø" target="_blank">Map</a></div>
+    </div>
   </div>
 
-  <div class="pack-group fade-in" style="animation-delay:.2s">
-    <div class="pack-group-title">Both Trips</div>
-    <div class="pack-item" onclick="togglePack(this,'p-g1')"><div class="pack-check" id="p-g1">✓</div><div class="pack-name">Passport — valid 6+ months</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-g2')"><div class="pack-check" id="p-g2">✓</div><div class="pack-name">EU travel adapter (Type C/F)</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-g3')"><div class="pack-check" id="p-g3">✓</div><div class="pack-name">Basic meds — ibuprofen, Pepto, antihistamine</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-g4')"><div class="pack-check" id="p-g4">✓</div><div class="pack-name">Download offline maps before leaving</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-g5')"><div class="pack-check" id="p-g5">✓</div><div class="pack-name">Cash in euros (tips, small spots)</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-g6')"><div class="pack-check" id="p-g6">✓</div><div class="pack-name">All booking confirmations printed/saved</div></div>
-    <div class="pack-item" onclick="togglePack(this,'p-g7')"><div class="pack-check" id="p-g7">✓</div><div class="pack-name">Travel insurance docs</div></div>
+  <div class="pack-group fade-in" style="animation-delay:.16s">
+    <div class="pack-group-title">Dinner</div>
+    <div class="rest-item">
+      <div class="rest-name">Emma's Dream Kitchen ★</div>
+      <div class="rest-desc">If you only do one dinner in Tromsø, make it here. Sami meets fine dining — reindeer carpaccio, Arctic cod, cloudberry dessert. Reserve ahead.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Emmas+Drømmekjøkken+Tromsø" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Skarven</div>
+      <div class="rest-desc">Classic Tromsø harbor restaurant. King crab, fresh catch, Norwegian classics. Great views of the waterfront.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Skarven+Restaurant+Tromsø" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Arctandria</div>
+      <div class="rest-desc">Old wooden warehouse turned seafood restaurant. Stockfish, Arctic shrimp, whale (if adventurous). Atmospheric and very local.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Arctandria+Restaurant+Tromsø" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Ølhallen</div>
+      <div class="rest-desc">Oldest pub in Tromsø (1928). No-frills, great local beer, hearty food. Where locals actually eat.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Ølhallen+Tromsø" target="_blank">Map</a></div>
+    </div>
+  </div>
+
+  <!-- FUNCHAL FOOD -->
+  <div class="section-divider fade-in" style="animation-delay:.2s"><span class="section-divider-label">Funchal, Portugal</span></div>
+
+  <div class="pack-group fade-in" style="animation-delay:.22s">
+    <div class="pack-group-title">Breakfast</div>
+    <div class="rest-item">
+      <div class="rest-name">Café do Teatro</div>
+      <div class="rest-desc">Beautiful historic café on Praça Município. Bica coffee, pastel de nata, azulejo tiles. The definitive Funchal morning.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Café+do+Teatro+Funchal" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Pão a Pão</div>
+      <div class="rest-desc">Local bakery café. Fresh bread, bolo do caco (Madeiran bread), great espresso. No tourist markup.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Pão+a+Pão+Funchal" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Loja dos Queijos</div>
+      <div class="rest-desc">Cheese and charcuterie shop that doubles as a breakfast spot. Local Madeira cheeses, honey, bolo de mel.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Loja+dos+Queijos+Funchal" target="_blank">Map</a></div>
+    </div>
+  </div>
+
+  <div class="pack-group fade-in" style="animation-delay:.25s">
+    <div class="pack-group-title">Lunch</div>
+    <div class="rest-item">
+      <div class="rest-name">Mercado dos Lavradores</div>
+      <div class="rest-desc">Eat inside the covered market — fresh fruit, espetada skewers, grilled fish, local vendors. The most authentic midday stop.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Mercado+dos+Lavradores+Funchal" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">O Tasco</div>
+      <div class="rest-desc">A proper local tasca. No frills, no tourists, just good Madeiran food — espetada, milho frito (fried polenta), cataplana fish stew.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=O+Tasco+Funchal" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Taberna Madeira</div>
+      <div class="rest-desc">Traditional Madeiran tavern atmosphere. Great for a long relaxed lunch — try the tuna steak and lapas (limpets).</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Taberna+Madeira+Funchal" target="_blank">Map</a></div>
+    </div>
+  </div>
+
+  <div class="pack-group fade-in" style="animation-delay:.28s">
+    <div class="pack-group-title">Dinner</div>
+    <div class="rest-item">
+      <div class="rest-name">ÁKUA ★ — Apr 2 reservation</div>
+      <div class="rest-desc">Modern seafood. Tuna tartare, octopus rice, limpets. Already reserved for the birthday dinner. The best on the island right now.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=AKUA+Restaurant+Funchal" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Il Gallo d'Oro ★★ Michelin</div>
+      <div class="rest-desc">Two Michelin stars inside Belmond Reid's Palace. The island's most prestigious dinner. Book well in advance. Special occasion worthy.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Il+Gallo+d'Oro+Funchal" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Vila do Peixe — Apr 4</div>
+      <div class="rest-desc">Seafood in Câmara de Lobos. Order the espada (black scabbardfish) — it's a Madeira delicacy only found in these deep waters.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Vila+do+Peixe+Madeira" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">Fauna &amp; Flora</div>
+      <div class="rest-desc">Beautiful garden restaurant with a botanical setting. Creative Portuguese cuisine, excellent wine list. Very instagrammable without being a tourist trap.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=Fauna+%26+Flora+Funchal" target="_blank">Map</a></div>
+    </div>
+    <div class="rest-item">
+      <div class="rest-name">O Jango</div>
+      <div class="rest-desc">Traditional Madeira. Best espetada (beef on a laurel stick) in Funchal. Family-run, local crowd, great poncha to start.</div>
+      <div class="actions"><a class="act" href="https://maps.google.com/?q=O+Jango+Funchal" target="_blank">Map</a></div>
+    </div>
   </div>
 </div>
 
