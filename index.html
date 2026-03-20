@@ -348,7 +348,7 @@ body.on-madeira #wx-w { grid-column: 1 / -1; max-width: 320px; }
 .day-card.open .day-chev{transform:rotate(180deg);}
 .day-body{
   display:none;
-  background:rgba(20,18,14,.95);
+  background:var(--surface2);
   padding:20px 24px 20px 20px;
   box-shadow:inset 0 1px 0 var(--border), var(--shadow-sm);
 }
@@ -1863,8 +1863,11 @@ function drawWheel(angle){
   const arc=(2*Math.PI)/n;
   const cx=160,cy=160,r=155;
 
-  // Muted palette — alternating dark segments
-  const colors=['rgba(255,255,255,0.06)','rgba(255,255,255,0.10)'];
+  // Detect light mode
+  const isLight=document.body.classList.contains('light-mode');
+  const colors=isLight
+    ?['rgba(180,160,120,0.15)','rgba(180,160,120,0.30)']
+    :['rgba(255,255,255,0.06)','rgba(255,255,255,0.13)'];
 
   ctx.clearRect(0,0,320,320);
 
@@ -1886,8 +1889,8 @@ function drawWheel(angle){
     ctx.closePath();
     ctx.fillStyle=colors[i%2];
     ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,0.04)';
-    ctx.lineWidth=1;
+    ctx.strokeStyle=isLight?'rgba(100,80,40,0.25)':'rgba(255,255,255,0.12)';
+    ctx.lineWidth=1.5;
     ctx.stroke();
 
     // Emoji only — no text labels
@@ -1906,9 +1909,9 @@ function drawWheel(angle){
   // Center cap
   ctx.beginPath();
   ctx.arc(cx,cy,24,0,2*Math.PI);
-  ctx.fillStyle='#1a1a1a';
+  ctx.fillStyle=isLight?'#c8b98a':'#1a1a1a';
   ctx.fill();
-  ctx.strokeStyle='rgba(255,255,255,0.1)';
+  ctx.strokeStyle=isLight?'rgba(100,80,40,0.3)':'rgba(255,255,255,0.1)';
   ctx.lineWidth=2;
   ctx.stroke();
 }
