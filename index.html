@@ -505,6 +505,50 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
   font-size:10px;letter-spacing:2px;
   text-transform:uppercase;color:var(--stone);opacity:.4;
 }
+
+/* ── EXPENSE SPLIT ── */
+.expense-add-row{display:grid;grid-template-columns:1fr 1fr 100px 60px;gap:8px;margin-bottom:16px;}
+@media(max-width:600px){.expense-add-row{grid-template-columns:1fr 1fr;}}
+.exp-input{background:var(--glass);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--cream);font-size:14px;font-family:var(--sans);outline:none;transition:border-color .2s;}
+.exp-input:focus{border-color:var(--amber);}
+.exp-input::placeholder{color:var(--stone);}
+.exp-amount{font-variant-numeric:tabular-nums;}
+.exp-btn{background:var(--amber);border:none;border-radius:8px;color:#000;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.exp-btn:hover{opacity:.85;}
+.expense-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.expense-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--glass);border:1px solid var(--border);border-radius:8px;font-size:14px;}
+.expense-row-left{display:flex;flex-direction:column;gap:2px;}
+.expense-who{font-weight:600;color:var(--cream);}
+.expense-what{font-size:12px;color:var(--stone);}
+.expense-row-right{display:flex;align-items:center;gap:12px;}
+.expense-amount{font-weight:700;color:var(--amber);font-variant-numeric:tabular-nums;}
+.expense-del{background:none;border:none;color:var(--stone);cursor:pointer;font-size:16px;padding:0 4px;transition:color .2s;}
+.expense-del:hover{color:#ff6b6b;}
+.expense-summary{padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;}
+.expense-summary h4{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);margin:0 0 12px;}
+.expense-total{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px;}
+.expense-total-label{color:var(--stone);}
+.expense-total-val{font-weight:700;color:var(--cream);}
+.owe-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-top:1px solid rgba(255,255,255,0.05);}
+.owe-name{color:var(--stone);}
+.owe-amount{font-weight:600;font-variant-numeric:tabular-nums;}
+.owe-amount.positive{color:#6ee7b7;}
+.owe-amount.negative{color:#fca5a5;}
+
+/* ── SPIN ── */
+.spin-tabs{display:flex;gap:8px;margin-bottom:20px;}
+.spin-tab{padding:8px 20px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--stone);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.spin-tab.active{background:var(--amber);border-color:var(--amber);color:#000;}
+.spin-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;}
+.spin-result{text-align:center;padding:32px 24px;background:var(--glass);border:1px solid var(--border);border-radius:16px;width:100%;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:all .3s;}
+.spin-result.spinning{opacity:.4;transform:scale(.97);}
+.spin-icon{font-size:40px;line-height:1;}
+.spin-activity{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--cream);}
+.spin-detail{font-size:13px;color:var(--stone);max-width:320px;line-height:1.6;}
+.spin-btn{padding:14px 48px;border-radius:12px;background:var(--amber);border:none;color:#000;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.02em;transition:transform .15s, opacity .15s;}
+.spin-btn:hover{transform:translateY(-1px);opacity:.9;}
+.spin-btn:active{transform:translateY(0);}
+
 /* ── PHOTO WALL ── */
 .photo-wall{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);}
 .photo-wall-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
@@ -1493,6 +1537,46 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════
+     EXPENSE SPLIT
+════════════════════════════════════════════════════════ -->
+<div class="section-wrap" id="expenses">
+  <h2>Expense Split</h2>
+  <p class="section-sub">Log shared costs. See who owes who at the end.</p>
+
+  <div class="expense-add-row">
+    <input id="exp-who" type="text" placeholder="Who paid?" class="exp-input" />
+    <input id="exp-what" type="text" placeholder="What for?" class="exp-input" />
+    <input id="exp-amount" type="number" placeholder="$0.00" step="0.01" min="0" class="exp-input exp-amount" />
+    <button onclick="addExpense()" class="exp-btn">Add</button>
+  </div>
+
+  <div id="expense-list" class="expense-list"></div>
+  <div id="expense-summary" class="expense-summary"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     RANDOM ACTIVITY PICKERS
+════════════════════════════════════════════════════════ -->
+<div class="section-wrap" id="spin">
+  <h2>Can't Decide?</h2>
+  <p class="section-sub">Spin for something to do.</p>
+
+  <div class="spin-tabs">
+    <button class="spin-tab active" onclick="setSpinDest('norway', this)">Tromsø</button>
+    <button class="spin-tab" onclick="setSpinDest('madeira', this)">Madeira</button>
+  </div>
+
+  <div class="spin-wrap">
+    <div id="spin-result" class="spin-result">
+      <div class="spin-icon">❄️</div>
+      <div class="spin-activity">Hit spin</div>
+      <div class="spin-detail"></div>
+    </div>
+    <button class="spin-btn" onclick="spinActivity()">Spin</button>
+  </div>
+</div>
+
 <div class="foot">Norway &amp; Madeira · 2026 · The Whole Crew</div>
 
 </div><!-- .page -->
@@ -1624,6 +1708,120 @@ function restorePack(){
   });
 }
 
+/* ── EXPENSE SPLIT ── */
+function addExpense(){
+  const who=document.getElementById('exp-who').value.trim();
+  const what=document.getElementById('exp-what').value.trim();
+  const amount=parseFloat(document.getElementById('exp-amount').value);
+  if(!who||!what||!amount||amount<=0) return;
+  const expenses=JSON.parse(localStorage.getItem('trip_expenses')||'[]');
+  expenses.push({who,what,amount,id:Date.now()});
+  localStorage.setItem('trip_expenses',JSON.stringify(expenses));
+  document.getElementById('exp-who').value='';
+  document.getElementById('exp-what').value='';
+  document.getElementById('exp-amount').value='';
+  renderExpenses();
+}
+function deleteExpense(id){
+  let expenses=JSON.parse(localStorage.getItem('trip_expenses')||'[]');
+  expenses=expenses.filter(e=>e.id!==id);
+  localStorage.setItem('trip_expenses',JSON.stringify(expenses));
+  renderExpenses();
+}
+function renderExpenses(){
+  const expenses=JSON.parse(localStorage.getItem('trip_expenses')||'[]');
+  const list=document.getElementById('expense-list');
+  const summary=document.getElementById('expense-summary');
+  if(!list) return;
+
+  list.innerHTML=expenses.map(e=>`
+    <div class="expense-row">
+      <div class="expense-row-left">
+        <span class="expense-who">${e.who}</span>
+        <span class="expense-what">${e.what}</span>
+      </div>
+      <div class="expense-row-right">
+        <span class="expense-amount">$${e.amount.toFixed(2)}</span>
+        <button class="expense-del" onclick="deleteExpense(${e.id})">×</button>
+      </div>
+    </div>
+  `).join('');
+
+  if(expenses.length===0){summary.innerHTML='';return;}
+
+  // Calculate totals per person
+  const totals={};
+  const total=expenses.reduce((sum,e)=>{
+    totals[e.who]=(totals[e.who]||0)+e.amount;
+    return sum+e.amount;
+  },0);
+  const people=Object.keys(totals);
+  const fairShare=total/people.length;
+  const balances=people.map(p=>({name:p,balance:totals[p]-fairShare}));
+
+  summary.innerHTML=`
+    <h4>Summary</h4>
+    <div class="expense-total"><span class="expense-total-label">Total spent</span><span class="expense-total-val">$${total.toFixed(2)}</span></div>
+    <div class="expense-total"><span class="expense-total-label">Fair share each</span><span class="expense-total-val">$${fairShare.toFixed(2)}</span></div>
+    ${balances.map(b=>`
+      <div class="owe-row">
+        <span class="owe-name">${b.name}</span>
+        <span class="owe-amount ${b.balance>=0?'positive':'negative'}">${b.balance>=0?'gets back':'owes'} $${Math.abs(b.balance).toFixed(2)}</span>
+      </div>
+    `).join('')}
+  `;
+}
+
+/* ── SPIN ── */
+const SPIN_DATA={
+  norway:[
+    {icon:'🐺',activity:'Spot the Arctic Fox',detail:'Head to the outskirts of Tromsø toward Kvaløya. Bring patience and a zoom lens.'},
+    {icon:'🌊',activity:'Ersfjordbotn at Dusk',detail:'Drive 20 min out. Watch the fjord turn gold. Best light in Norway happens here.'},
+    {icon:'☕',activity:'Find the Best Coffee in Town',detail:'Locals swear by Risø Urban Farm Café. Get there early, order whatever\'s fresh.'},
+    {icon:'🍺',activity:'Ølhallen Pub Night',detail:'Oldest pub in Tromsø. 1928. Dark wood, local beer, no tourists. Go late.'},
+    {icon:'🧊',activity:'Walk the Arctic Cathedral',detail:'Tromsdalen. 15 minutes from the center. Iconic glass front. No crowds at night.'},
+    {icon:'🌌',activity:'Aurora Hunt Solo',detail:'Skip the tour. Drive to Kvaløya, turn off headlights, wait 20 minutes for your eyes to adjust.'},
+    {icon:'🦌',activity:'Reindeer Sighting',detail:'Drive east toward Breivikeidet. Reindeer cross the road freely this time of year.'},
+    {icon:'🏔️',activity:'Fjellheisen After Dark',detail:'Cable car up at 9 PM. City lights below, sky above. Bring every layer you have.'},
+    {icon:'🐟',activity:'Fish Market Lunch',detail:'Pick whatever was caught that morning. Eat it standing up. Best meal of the trip.'},
+    {icon:'🛶',activity:'Waterfront Walk',detail:'Bridge to mainland and back. Clear nights only. Silence is the whole point.'},
+  ],
+  madeira:[
+    {icon:'🌊',activity:'Lava Pool Swim at Porto Moniz',detail:'Natural volcanic pools on the north coast. Cold, clear, and unlike anything else.'},
+    {icon:'🍸',activity:'Poncha at Rei da Poncha',detail:'Aguardente + honey + lemon. Order three flavors. Don\'t ask what\'s in them.'},
+    {icon:'🌿',activity:'Levada Walk at Dusk',detail:'Follow any levada east of Funchal after 4 PM. Jungle goes quiet. Light goes gold.'},
+    {icon:'🧗',activity:'Ponta de São Lourenço',detail:'East tip of the island. 45 min drive. Volcanic cliffs. Wind in your face. No shade.'},
+    {icon:'🌅',activity:'Cabo Girão Skywalk',detail:'580m straight down through glass. Don\'t think. Just look.'},
+    {icon:'🐟',activity:'Espada at Vila do Peixe',detail:'Black scabbardfish caught only in these waters. Order it simply grilled.'},
+    {icon:'🚡',activity:'Monte Cable Car',detail:'Up the hill, through the tropical garden, back down. Slow, beautiful, worth it.'},
+    {icon:'🍷',activity:'Barbeito Wine Tasting',detail:'Madeira wine is aged differently than anything you\'ve tried. Go in the afternoon.'},
+    {icon:'🌺',activity:'Rua de Santa Maria',detail:'Every door is commissioned art. Walk the whole street. No agenda.'},
+    {icon:'☁️',activity:'Drive into the Clouds',detail:'Head to Pico do Arieiro and keep going. You\'ll disappear into the mist.'},
+  ]
+};
+let currentSpinDest='norway';
+function setSpinDest(dest, btn){
+  currentSpinDest=dest;
+  document.querySelectorAll('.spin-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const result=document.getElementById('spin-result');
+  result.querySelector('.spin-icon').textContent=dest==='norway'?'❄️':'🌊';
+  result.querySelector('.spin-activity').textContent='Hit spin';
+  result.querySelector('.spin-detail').textContent='';
+}
+function spinActivity(){
+  const result=document.getElementById('spin-result');
+  result.classList.add('spinning');
+  setTimeout(()=>{
+    const pool=SPIN_DATA[currentSpinDest];
+    const pick=pool[Math.floor(Math.random()*pool.length)];
+    result.querySelector('.spin-icon').textContent=pick.icon;
+    result.querySelector('.spin-activity').textContent=pick.activity;
+    result.querySelector('.spin-detail').textContent=pick.detail;
+    result.classList.remove('spinning');
+  },400);
+}
+
 /* ── PHOTO WALL ── */
 function initPhotoWalls(){
   document.querySelectorAll('.day-card').forEach(card=>{
@@ -1731,6 +1929,7 @@ function navPhoto(e, key, idx, dir){
   restoreChecks();
   restorePack();
   initPhotoWalls();
+  renderExpenses();
 })();
 </script>
 </body>
