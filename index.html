@@ -505,6 +505,24 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
   font-size:10px;letter-spacing:2px;
   text-transform:uppercase;color:var(--stone);opacity:.4;
 }
+/* ── PHOTO WALL ── */
+.photo-wall{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);}
+.photo-wall-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.photo-wall-title{font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:.06em;text-transform:uppercase;}
+.photo-add-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;}
+.photo-add-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;}
+.photo-thumb-wrap{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;}
+.photo-thumb{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform .2s;}
+.photo-thumb:hover{transform:scale(1.04);}
+.photo-delete{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,0.7);border:none;color:#fff;font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.photo-thumb-wrap:hover .photo-delete{opacity:1;}
+.photo-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;display:flex;align-items:center;justify-content:center;}
+.photo-overlay-inner{position:relative;max-width:90vw;max-height:90vh;}
+.photo-full{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px;}
+.photo-close{position:absolute;top:-16px;right:-16px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-prev{left:-50px;}.photo-next{right:-50px;}
 </style>
 </head>
 <body class="on-norway">
@@ -1606,6 +1624,104 @@ function restorePack(){
   });
 }
 
+/* ── PHOTO WALL ── */
+function initPhotoWalls(){
+  document.querySelectorAll('.day-card').forEach(card=>{
+    const dayNum=card.querySelector('.day-num');
+    const dayDate=card.querySelector('.day-date');
+    if(!dayNum) return;
+    const key='photos_'+dayNum.textContent.trim()+'_'+(dayDate?dayDate.textContent.trim():'');
+    const body=card.querySelector('.day-body');
+    if(!body) return;
+
+    // Create photo wall
+    const wall=document.createElement('div');
+    wall.className='photo-wall';
+    wall.innerHTML=`
+      <div class="photo-wall-header">
+        <span class="photo-wall-title">📸 Memories</span>
+        <label class="photo-add-btn">
+          + Add Photo
+          <input type="file" accept="image/*" multiple style="display:none" onchange="addPhotos(event,'${key}',this.closest('.photo-wall'))">
+        </label>
+      </div>
+      <div class="photo-grid" id="grid_${key.replace(/[^a-z0-9]/gi,'_')}"></div>
+    `;
+    body.appendChild(wall);
+    loadPhotos(key, wall.querySelector('.photo-grid'));
+  });
+}
+
+function addPhotos(event, key, wall){
+  const files=Array.from(event.target.files);
+  const existing=JSON.parse(localStorage.getItem(key)||'[]');
+  let processed=0;
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      existing.push(e.target.result);
+      localStorage.setItem(key, JSON.stringify(existing));
+      processed++;
+      if(processed===files.length){
+        const gridId='grid_'+key.replace(/[^a-z0-9]/gi,'_');
+        loadPhotos(key, document.getElementById(gridId));
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  event.target.value='';
+}
+
+function loadPhotos(key, grid){
+  if(!grid) return;
+  const photos=JSON.parse(localStorage.getItem(key)||'[]');
+  grid.innerHTML='';
+  photos.forEach((src,i)=>{
+    const wrap=document.createElement('div');
+    wrap.className='photo-thumb-wrap';
+    wrap.innerHTML=`
+      <img src="${src}" class="photo-thumb" onclick="viewPhoto('${key}',${i})" loading="lazy">
+      <button class="photo-delete" onclick="deletePhoto('${key}',${i},event)" title="Remove">×</button>
+    `;
+    grid.appendChild(wrap);
+  });
+}
+
+function deletePhoto(key, idx, e){
+  e.stopPropagation();
+  const photos=JSON.parse(localStorage.getItem(key)||'[]');
+  photos.splice(idx,1);
+  localStorage.setItem(key, JSON.stringify(photos));
+  const gridId='grid_'+key.replace(/[^a-z0-9]/gi,'_');
+  loadPhotos(key, document.getElementById(gridId));
+}
+
+function viewPhoto(key, idx){
+  const photos=JSON.parse(localStorage.getItem(key)||'[]');
+  const overlay=document.createElement('div');
+  overlay.className='photo-overlay';
+  overlay.innerHTML=`
+    <div class="photo-overlay-inner">
+      <img src="${photos[idx]}" class="photo-full">
+      ${photos.length>1?`<button class="photo-nav photo-prev" onclick="navPhoto(event,'${key}',${idx},-1)">‹</button><button class="photo-nav photo-next" onclick="navPhoto(event,'${key}',${idx},1)">›</button>`:''}
+      <button class="photo-close" onclick="this.closest('.photo-overlay').remove()">×</button>
+    </div>
+  `;
+  overlay.addEventListener('click',e=>{if(e.target===overlay) overlay.remove();});
+  document.body.appendChild(overlay);
+}
+
+function navPhoto(e, key, idx, dir){
+  e.stopPropagation();
+  const photos=JSON.parse(localStorage.getItem(key)||'[]');
+  const newIdx=(idx+dir+photos.length)%photos.length;
+  const overlay=e.target.closest('.photo-overlay');
+  overlay.querySelector('.photo-full').src=photos[newIdx];
+  overlay.querySelectorAll('.photo-nav').forEach(btn=>{
+    btn.setAttribute('onclick',btn.getAttribute('onclick').replace(/,\d+,/,`,${newIdx},`));
+  });
+}
+
 /* ── INIT ── */
 (function(){
   const now=new Date(),m=now.getMonth()+1,d=now.getDate();
@@ -1614,6 +1730,7 @@ function restorePack(){
   loadAurora();
   restoreChecks();
   restorePack();
+  initPhotoWalls();
 })();
 </script>
 </body>
