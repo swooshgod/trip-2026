@@ -551,6 +551,10 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
 .spin-btn:hover{transform:translateY(-1px);opacity:.9;}
 .spin-btn:active{transform:translateY(0);}
 .spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.wheel-peek{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(20,20,20,0.95);border:1px solid var(--amber);border-radius:10px;font-size:14px;font-weight:600;color:var(--cream);position:absolute;left:50%;transform:translateX(-50%);bottom:-52px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none;}
+.wheel-peek.visible{opacity:1;}
+.peek-icon{font-size:18px;}
+.wheel-outer{position:relative;display:flex;justify-content:center;margin-bottom:56px;}
 
 /* ── PHOTO WALL ── */
 .photo-wall{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);}
@@ -1867,32 +1871,16 @@ function drawWheel(angle){
     ctx.lineWidth=1;
     ctx.stroke();
 
-    // Emoji
+    // Emoji only — no text labels
     const mid=start+arc/2;
-    const ex=cx+Math.cos(mid)*(r*0.65);
-    const ey=cy+Math.sin(mid)*(r*0.65);
+    const ex=cx+Math.cos(mid)*(r*0.72);
+    const ey=cy+Math.sin(mid)*(r*0.72);
     ctx.save();
     ctx.translate(ex,ey);
-    ctx.rotate(mid+Math.PI/2);
-    ctx.font='16px serif';
+    ctx.font='18px serif';
     ctx.textAlign='center';
     ctx.textBaseline='middle';
     ctx.fillText(item.icon,0,0);
-    ctx.restore();
-
-    // Label
-    const tx=cx+Math.cos(mid)*(r*0.36);
-    const ty=cy+Math.sin(mid)*(r*0.36);
-    ctx.save();
-    ctx.translate(tx,ty);
-    ctx.rotate(mid+Math.PI/2);
-    ctx.font='bold 9px system-ui,sans-serif';
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.fillStyle='rgba(255,255,255,0.75)';
-    // Truncate long names
-    const label=item.activity.length>14?item.activity.substring(0,13)+'…':item.activity;
-    ctx.fillText(label,0,0);
     ctx.restore();
   });
 
@@ -2076,6 +2064,31 @@ function navPhoto(e, key, idx, dir){
   initPhotoWalls();
   renderExpenses();
   drawWheel(0);
+  // Tap wheel to peek at a slice
+  const canvas=document.getElementById('spinWheel');
+  if(canvas){
+    canvas.addEventListener('click',function(e){
+      if(isSpinning) return;
+      const rect=canvas.getBoundingClientRect();
+      const x=e.clientX-rect.left-160;
+      const y=e.clientY-rect.top-160;
+      const dist=Math.sqrt(x*x+y*y);
+      if(dist>155||dist<24) return; // outside wheel or center
+      const pool=SPIN_DATA[currentSpinDest];
+      const n=pool.length;
+      const arc=(2*Math.PI)/n;
+      let angle=(Math.atan2(y,x)-wheelAngle%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+      const idx=Math.floor(angle/arc)%n;
+      const pick=pool[idx];
+      // Show peek tooltip
+      let tip=document.getElementById('wheel-peek');
+      if(!tip){tip=document.createElement('div');tip.id='wheel-peek';tip.className='wheel-peek';document.getElementById('spin').appendChild(tip);}
+      tip.innerHTML=`<span class="peek-icon">${pick.icon}</span><span class="peek-name">${pick.activity}</span>`;
+      tip.classList.add('visible');
+      clearTimeout(tip._t);
+      tip._t=setTimeout(()=>tip.classList.remove('visible'),2500);
+    });
+  }
 })();
 </script>
 </body>
