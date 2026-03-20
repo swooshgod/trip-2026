@@ -539,15 +539,18 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
 .spin-tabs{display:flex;gap:8px;margin-bottom:20px;}
 .spin-tab{padding:8px 20px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--stone);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
 .spin-tab.active{background:var(--amber);border-color:var(--amber);color:#000;}
-.spin-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;}
-.spin-result{text-align:center;padding:32px 24px;background:var(--glass);border:1px solid var(--border);border-radius:16px;width:100%;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:all .3s;}
-.spin-result.spinning{opacity:.4;transform:scale(.97);}
-.spin-icon{font-size:40px;line-height:1;}
-.spin-activity{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--cream);}
-.spin-detail{font-size:13px;color:var(--stone);max-width:320px;line-height:1.6;}
-.spin-btn{padding:14px 48px;border-radius:12px;background:var(--amber);border:none;color:#000;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.02em;transition:transform .15s, opacity .15s;}
+.wheel-outer{position:relative;display:flex;justify-content:center;margin-bottom:16px;}
+.wheel-pointer{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:22px;color:var(--amber);z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
+#spinWheel{border-radius:50%;box-shadow:0 0 0 4px rgba(255,255,255,0.06),0 8px 40px rgba(0,0,0,.5);display:block;}
+.spin-result{text-align:center;padding:24px 20px;background:var(--glass);border:1px solid var(--border);border-radius:16px;width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:16px;animation:fadeInUp .4s ease;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.spin-icon{font-size:36px;line-height:1;}
+.spin-activity{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--cream);}
+.spin-detail{font-size:13px;color:var(--stone);max-width:300px;line-height:1.6;}
+.spin-btn{display:block;width:100%;padding:14px;border-radius:12px;background:var(--amber);border:none;color:#000;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.02em;transition:transform .15s,opacity .15s;}
 .spin-btn:hover{transform:translateY(-1px);opacity:.9;}
 .spin-btn:active{transform:translateY(0);}
+.spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 
 /* ── PHOTO WALL ── */
 .photo-wall{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);}
@@ -1560,21 +1563,25 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
 ════════════════════════════════════════════════════════ -->
 <div class="section-wrap" id="spin">
   <h2>Can't Decide?</h2>
-  <p class="section-sub">Spin for something to do.</p>
+  <p class="section-sub">Spin the wheel.</p>
 
   <div class="spin-tabs">
     <button class="spin-tab active" onclick="setSpinDest('norway', this)">Tromsø</button>
     <button class="spin-tab" onclick="setSpinDest('madeira', this)">Madeira</button>
   </div>
 
-  <div class="spin-wrap">
-    <div id="spin-result" class="spin-result">
-      <div class="spin-icon">❄️</div>
-      <div class="spin-activity">Hit spin</div>
-      <div class="spin-detail"></div>
-    </div>
-    <button class="spin-btn" onclick="spinActivity()">Spin</button>
+  <div class="wheel-outer">
+    <div class="wheel-pointer">▼</div>
+    <canvas id="spinWheel" width="320" height="320"></canvas>
   </div>
+
+  <div id="spin-result" class="spin-result" style="display:none">
+    <div class="spin-icon"></div>
+    <div class="spin-activity"></div>
+    <div class="spin-detail"></div>
+  </div>
+
+  <button class="spin-btn" id="spinBtn" onclick="spinActivity()">Spin</button>
 </div>
 
 <div class="foot">Norway &amp; Madeira · 2026 · The Whole Crew</div>
@@ -1775,51 +1782,189 @@ function renderExpenses(){
 /* ── SPIN ── */
 const SPIN_DATA={
   norway:[
-    {icon:'🐺',activity:'Spot the Arctic Fox',detail:'Head to the outskirts of Tromsø toward Kvaløya. Bring patience and a zoom lens.'},
-    {icon:'🌊',activity:'Ersfjordbotn at Dusk',detail:'Drive 20 min out. Watch the fjord turn gold. Best light in Norway happens here.'},
-    {icon:'☕',activity:'Find the Best Coffee in Town',detail:'Locals swear by Risø Urban Farm Café. Get there early, order whatever\'s fresh.'},
-    {icon:'🍺',activity:'Ølhallen Pub Night',detail:'Oldest pub in Tromsø. 1928. Dark wood, local beer, no tourists. Go late.'},
-    {icon:'🧊',activity:'Walk the Arctic Cathedral',detail:'Tromsdalen. 15 minutes from the center. Iconic glass front. No crowds at night.'},
-    {icon:'🌌',activity:'Aurora Hunt Solo',detail:'Skip the tour. Drive to Kvaløya, turn off headlights, wait 20 minutes for your eyes to adjust.'},
-    {icon:'🦌',activity:'Reindeer Sighting',detail:'Drive east toward Breivikeidet. Reindeer cross the road freely this time of year.'},
-    {icon:'🏔️',activity:'Fjellheisen After Dark',detail:'Cable car up at 9 PM. City lights below, sky above. Bring every layer you have.'},
-    {icon:'🐟',activity:'Fish Market Lunch',detail:'Pick whatever was caught that morning. Eat it standing up. Best meal of the trip.'},
-    {icon:'🛶',activity:'Waterfront Walk',detail:'Bridge to mainland and back. Clear nights only. Silence is the whole point.'},
+    {icon:'🐺',activity:'Spot the Arctic Fox',detail:'Head toward Kvaløya. Bring patience and a zoom lens. Dawn or dusk only.'},
+    {icon:'🌊',activity:'Ersfjordbotn at Dusk',detail:'Drive 20 min out. Watch the fjord turn gold. Best light in all of Norway.'},
+    {icon:'☕',activity:'Best Coffee in Town',detail:'Risø Urban Farm Café. Get there early, order whatever\'s fresh, stay an hour.'},
+    {icon:'🍺',activity:'Ølhallen, Last Round',detail:'Oldest pub in Tromsø. 1928. Dark wood, local beer, no tourists. Go late.'},
+    {icon:'🧊',activity:'Arctic Cathedral at Night',detail:'Tromsdalen. 15 min from center. Lit up at night. No crowds after 8 PM.'},
+    {icon:'🌌',activity:'Solo Aurora Hunt',detail:'Skip the tour. Drive to Kvaløya, kill the headlights, give your eyes 20 minutes.'},
+    {icon:'🦌',activity:'Reindeer on the Road',detail:'Drive east toward Breivikeidet. They cross freely this time of year. Don\'t rush them.'},
+    {icon:'🏔️',activity:'Fjellheisen After Dark',detail:'Cable car at 9 PM. City lights below, open sky above. Bring every layer you own.'},
+    {icon:'🐟',activity:'Fish Market Lunch',detail:'Pick whatever was caught that morning. Eat it standing up at the harbour.'},
+    {icon:'🛶',activity:'Midnight Waterfront Walk',detail:'Bridge to mainland and back. Clear nights only. Silence is the whole point.'},
+    {icon:'🧖',activity:'Sauna Plunge (Again)',detail:'If you only do it once, you did it wrong. Find the nearest waterfront sauna.'},
+    {icon:'🌃',activity:'Tromsø Bridge at Midnight',detail:'Walk to the center of the bridge. Look both ways. Don\'t take a photo. Just stand there.'},
+    {icon:'🍳',activity:'Cook at the Airbnb',detail:'Buy something weird from the market. Figure it out together. Open a bottle.'},
+    {icon:'📷',activity:'Golden Hour Anywhere',detail:'Just pick a direction and walk. Light like this doesn\'t exist elsewhere.'},
+    {icon:'🎿',activity:'Snow Walk, No Plan',detail:'Get boots on and go. No destination. You\'ll find something.'},
+    {icon:'🌨️',activity:'Storm Watch from Inside',detail:'Find the best window in town and let the Arctic do its thing.'},
+    {icon:'🔭',activity:'Stargazing at Ersfjord',detail:'No aurora? Still worth it. Sky this dark doesn\'t happen close to cities.'},
+    {icon:'🥩',activity:'Reindeer at Emma\'s Dream Kitchen',detail:'You\'re in the Arctic. Order the reindeer. That\'s the move.'},
+    {icon:'🏊',activity:'Arctic Swim, No Sauna',detail:'Just get in. Count to ten. You\'ll talk about it for years.'},
+    {icon:'🚗',activity:'Drive Kvaløya with No Itinerary',detail:'Get in the car. Take the coastal road. Stop when something looks worth stopping for.'},
   ],
   madeira:[
-    {icon:'🌊',activity:'Lava Pool Swim at Porto Moniz',detail:'Natural volcanic pools on the north coast. Cold, clear, and unlike anything else.'},
-    {icon:'🍸',activity:'Poncha at Rei da Poncha',detail:'Aguardente + honey + lemon. Order three flavors. Don\'t ask what\'s in them.'},
-    {icon:'🌿',activity:'Levada Walk at Dusk',detail:'Follow any levada east of Funchal after 4 PM. Jungle goes quiet. Light goes gold.'},
-    {icon:'🧗',activity:'Ponta de São Lourenço',detail:'East tip of the island. 45 min drive. Volcanic cliffs. Wind in your face. No shade.'},
-    {icon:'🌅',activity:'Cabo Girão Skywalk',detail:'580m straight down through glass. Don\'t think. Just look.'},
-    {icon:'🐟',activity:'Espada at Vila do Peixe',detail:'Black scabbardfish caught only in these waters. Order it simply grilled.'},
-    {icon:'🚡',activity:'Monte Cable Car',detail:'Up the hill, through the tropical garden, back down. Slow, beautiful, worth it.'},
-    {icon:'🍷',activity:'Barbeito Wine Tasting',detail:'Madeira wine is aged differently than anything you\'ve tried. Go in the afternoon.'},
-    {icon:'🌺',activity:'Rua de Santa Maria',detail:'Every door is commissioned art. Walk the whole street. No agenda.'},
-    {icon:'☁️',activity:'Drive into the Clouds',detail:'Head to Pico do Arieiro and keep going. You\'ll disappear into the mist.'},
+    {icon:'🌊',activity:'Lava Pool Swim',detail:'Porto Moniz. Natural volcanic pools on the north coast. Cold, clear, otherworldly.'},
+    {icon:'🍸',activity:'Poncha at Rei da Poncha',detail:'Aguardente + honey + lemon. Order three flavors. Don\'t ask what\'s in any of them.'},
+    {icon:'🌿',activity:'Levada Walk at Dusk',detail:'Any levada east of Funchal after 4 PM. Jungle goes quiet. Light turns everything green-gold.'},
+    {icon:'🧗',activity:'Ponta de São Lourenço',detail:'East tip of the island. Volcanic cliffs dropping into the Atlantic. Wind in your face the whole way.'},
+    {icon:'🌅',activity:'Cabo Girão Skywalk',detail:'580m straight down through glass. Don\'t hesitate. Just walk out and look.'},
+    {icon:'🐟',activity:'Espada at Vila do Peixe',detail:'Black scabbardfish from these waters only. Order it simply grilled. That\'s it.'},
+    {icon:'🚡',activity:'Monte Cable Car + Garden',detail:'Ride up, walk through the botanical garden, ride back down. Two hours well spent.'},
+    {icon:'🍷',activity:'Barbeito Wine Tasting',detail:'Madeira wine ages differently than anything you\'ve had. Go in the afternoon, take notes.'},
+    {icon:'🌺',activity:'Rua de Santa Maria',detail:'Every door is a commissioned painting. Walk the entire street. No rushing.'},
+    {icon:'☁️',activity:'Drive into the Clouds',detail:'Head to Pico do Arieiro at dusk. You\'ll disappear completely. Bring a jacket.'},
+    {icon:'🌋',activity:'Seixal Black Sand Beach',detail:'North coast volcanic beach. Usually empty. The contrast of black sand and blue water is unreal.'},
+    {icon:'🌲',activity:'Fanal Forest at Dawn',detail:'Ancient laurel trees in the fog. Go before 8 AM before anyone else gets there.'},
+    {icon:'🍋',activity:'Market at Lavradores',detail:'Inside the covered market. Espetada skewers, tropical fruit you can\'t name. Eat everything.'},
+    {icon:'🌊',activity:'Watch the Waves at Ribeira da Janela',detail:'Volcanic rock stacks on the north coast. Stand close enough to feel the spray.'},
+    {icon:'🎭',activity:'Funchal Old Town at Night',detail:'Tile art, narrow streets, no agenda. Find a table outside and stay until it gets cold.'},
+    {icon:'🧗',activity:'Canyoneering (If You Can Still Walk)',detail:'Rappel down waterfalls through volcanic rock. You\'ll get soaked. Worth every second.'},
+    {icon:'🍊',activity:'Find the Best Pastel de Nata',detail:'Café do Teatro or Pão a Pão. Get there early. This is a serious mission.'},
+    {icon:'🌅',activity:'Sunrise at Pico Ruivo',detail:'Drive to Achada do Teixeira, hike 2.8km to the summit. Worth every step.'},
+    {icon:'🐚',activity:'Limpets at the Marina',detail:'Order lapas — limpets grilled with butter and lemon. Eat them while looking at the water.'},
+    {icon:'🌿',activity:'Just Drive the North Coast',detail:'PR everything. Take the coastal road north. Stop when the view earns it.'},
   ]
 };
+
 let currentSpinDest='norway';
-function setSpinDest(dest, btn){
+let wheelAngle=0;
+let isSpinning=false;
+
+function drawWheel(angle){
+  const canvas=document.getElementById('spinWheel');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const pool=SPIN_DATA[currentSpinDest];
+  const n=pool.length;
+  const arc=(2*Math.PI)/n;
+  const cx=160,cy=160,r=155;
+
+  // Muted palette — alternating dark segments
+  const colors=['rgba(255,255,255,0.06)','rgba(255,255,255,0.10)'];
+
+  ctx.clearRect(0,0,320,320);
+
+  // Shadow ring
+  ctx.beginPath();
+  ctx.arc(cx,cy,r+2,0,2*Math.PI);
+  ctx.strokeStyle='rgba(0,0,0,0.4)';
+  ctx.lineWidth=4;
+  ctx.stroke();
+
+  pool.forEach((item,i)=>{
+    const start=angle+i*arc;
+    const end=start+arc;
+
+    // Segment
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,end);
+    ctx.closePath();
+    ctx.fillStyle=colors[i%2];
+    ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.04)';
+    ctx.lineWidth=1;
+    ctx.stroke();
+
+    // Emoji
+    const mid=start+arc/2;
+    const ex=cx+Math.cos(mid)*(r*0.65);
+    const ey=cy+Math.sin(mid)*(r*0.65);
+    ctx.save();
+    ctx.translate(ex,ey);
+    ctx.rotate(mid+Math.PI/2);
+    ctx.font='16px serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(item.icon,0,0);
+    ctx.restore();
+
+    // Label
+    const tx=cx+Math.cos(mid)*(r*0.36);
+    const ty=cy+Math.sin(mid)*(r*0.36);
+    ctx.save();
+    ctx.translate(tx,ty);
+    ctx.rotate(mid+Math.PI/2);
+    ctx.font='bold 9px system-ui,sans-serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(255,255,255,0.75)';
+    // Truncate long names
+    const label=item.activity.length>14?item.activity.substring(0,13)+'…':item.activity;
+    ctx.fillText(label,0,0);
+    ctx.restore();
+  });
+
+  // Center cap
+  ctx.beginPath();
+  ctx.arc(cx,cy,24,0,2*Math.PI);
+  ctx.fillStyle='#1a1a1a';
+  ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.1)';
+  ctx.lineWidth=2;
+  ctx.stroke();
+}
+
+function setSpinDest(dest,btn){
   currentSpinDest=dest;
   document.querySelectorAll('.spin-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  const result=document.getElementById('spin-result');
-  result.querySelector('.spin-icon').textContent=dest==='norway'?'❄️':'🌊';
-  result.querySelector('.spin-activity').textContent='Hit spin';
-  result.querySelector('.spin-detail').textContent='';
+  document.getElementById('spin-result').style.display='none';
+  wheelAngle=0;
+  drawWheel(wheelAngle);
 }
+
 function spinActivity(){
-  const result=document.getElementById('spin-result');
-  result.classList.add('spinning');
-  setTimeout(()=>{
-    const pool=SPIN_DATA[currentSpinDest];
-    const pick=pool[Math.floor(Math.random()*pool.length)];
-    result.querySelector('.spin-icon').textContent=pick.icon;
-    result.querySelector('.spin-activity').textContent=pick.activity;
-    result.querySelector('.spin-detail').textContent=pick.detail;
-    result.classList.remove('spinning');
-  },400);
+  if(isSpinning) return;
+  isSpinning=true;
+  const btn=document.getElementById('spinBtn');
+  btn.disabled=true;
+
+  const pool=SPIN_DATA[currentSpinDest];
+  const n=pool.length;
+  const arc=(2*Math.PI)/n;
+
+  // Pick winner
+  const winnerIdx=Math.floor(Math.random()*n);
+
+  // Total rotation: multiple full spins + land on winner
+  // Pointer is at top (−π/2). Segment center for winner:
+  const targetAngle=(-Math.PI/2)-(winnerIdx*arc+arc/2);
+  const fullSpins=(5+Math.floor(Math.random()*4))*2*Math.PI;
+  const totalRotation=fullSpins+(targetAngle-wheelAngle%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+
+  const duration=4000+Math.random()*1000;
+  const startAngle=wheelAngle;
+  const startTime=performance.now();
+
+  function easeOut(t){return 1-Math.pow(1-t,4);}
+
+  function animate(now){
+    const elapsed=now-startTime;
+    const t=Math.min(elapsed/duration,1);
+    wheelAngle=startAngle+totalRotation*easeOut(t);
+    drawWheel(wheelAngle);
+
+    if(t<1){
+      requestAnimationFrame(animate);
+    } else {
+      // Land
+      isSpinning=false;
+      btn.disabled=false;
+      const pick=pool[winnerIdx];
+      const result=document.getElementById('spin-result');
+      result.style.display='flex';
+      result.querySelector('.spin-icon').textContent=pick.icon;
+      result.querySelector('.spin-activity').textContent=pick.activity;
+      result.querySelector('.spin-detail').textContent=pick.detail;
+      // Haptic
+      if(navigator.vibrate) navigator.vibrate([30,10,30]);
+    }
+  }
+
+  document.getElementById('spin-result').style.display='none';
+  requestAnimationFrame(animate);
 }
 
 /* ── PHOTO WALL ── */
@@ -1930,6 +2075,7 @@ function navPhoto(e, key, idx, dir){
   restorePack();
   initPhotoWalls();
   renderExpenses();
+  drawWheel(0);
 })();
 </script>
 </body>
