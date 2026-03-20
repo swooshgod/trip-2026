@@ -76,9 +76,12 @@ body::after{
   content:'';position:absolute;inset:0;
   background:linear-gradient(to bottom,var(--bg) 0%,transparent 40%,transparent 60%,var(--bg) 100%),
              linear-gradient(to right,var(--bg) 0%,transparent 30%,transparent 70%,var(--bg) 100%);
+  transition:background 0.3s;
 }
 body.on-norway  #norway-bg { opacity:.16; }
 body.on-madeira #madeira-bg { opacity:.17; }
+body.light-mode.on-norway  #norway-bg  { opacity:.04; }
+body.light-mode.on-madeira #madeira-bg { opacity:.04; }
 body.on-madeira #aurora-w   { display: none; }
 body.on-madeira #wx-w       { max-width: 100%; flex: unset; width: 100%; }
 
@@ -228,6 +231,8 @@ body.on-madeira #wx-w       { max-width: 100%; flex: unset; width: 100%; }
   background:rgba(15,13,11,.92);
   backdrop-filter:blur(14px);
 }
+body.light-mode .tabs{background:rgba(245,241,234,.95);}
+body.light-mode.on-madeira .tabs{background:rgba(240,235,225,.95);}
 .tab{
   font-family:var(--serif);
   font-size:17px;font-weight:400;
