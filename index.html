@@ -551,10 +551,10 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
 .spin-btn:hover{transform:translateY(-1px);opacity:.9;}
 .spin-btn:active{transform:translateY(0);}
 .spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.wheel-peek{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(20,20,20,0.95);border:1px solid var(--amber);border-radius:10px;font-size:14px;font-weight:600;color:var(--cream);position:absolute;left:50%;transform:translateX(-50%);bottom:-52px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none;}
+.wheel-peek{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(20,20,20,0.95);border:1px solid var(--amber);border-radius:10px;font-size:14px;font-weight:600;color:var(--cream);white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none;margin:12px auto 0;width:fit-content;}
 .wheel-peek.visible{opacity:1;}
 .peek-icon{font-size:18px;}
-.wheel-outer{position:relative;display:flex;justify-content:center;margin-bottom:56px;}
+.wheel-outer{position:relative;display:flex;flex-direction:column;align-items:center;margin-bottom:16px;}
 
 /* ── PHOTO WALL ── */
 .photo-wall{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);}
@@ -1579,13 +1579,13 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
     <canvas id="spinWheel" width="320" height="320"></canvas>
   </div>
 
+  <button class="spin-btn" id="spinBtn" onclick="spinActivity()">Spin</button>
+
   <div id="spin-result" class="spin-result" style="display:none">
     <div class="spin-icon"></div>
     <div class="spin-activity"></div>
     <div class="spin-detail"></div>
   </div>
-
-  <button class="spin-btn" id="spinBtn" onclick="spinActivity()">Spin</button>
 </div>
 
 <div class="foot">Norway &amp; Madeira · 2026 · The Whole Crew</div>
@@ -2082,7 +2082,7 @@ function navPhoto(e, key, idx, dir){
       const pick=pool[idx];
       // Show peek tooltip
       let tip=document.getElementById('wheel-peek');
-      if(!tip){tip=document.createElement('div');tip.id='wheel-peek';tip.className='wheel-peek';document.getElementById('spin').appendChild(tip);}
+      if(!tip){tip=document.createElement('div');tip.id='wheel-peek';tip.className='wheel-peek';canvas.parentNode.appendChild(tip);}
       tip.innerHTML=`<span class="peek-icon">${pick.icon}</span><span class="peek-name">${pick.activity}</span>`;
       tip.classList.add('visible');
       clearTimeout(tip._t);
