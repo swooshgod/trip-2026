@@ -18,6 +18,7 @@
   --cream:    #F5F0E8;
   --surface:  #1A1712;
   --surface2: #211E19;
+  --glass:    rgba(255,255,255,0.04);
   --border:   rgba(138,130,118,.18);
   --shadow-sm:0 2px 12px rgba(0,0,0,.45);
   --shadow-md:0 6px 30px rgba(0,0,0,.55);
@@ -25,6 +26,18 @@
   --serif:    'Playfair Display', Georgia, serif;
   --sans:     'DM Sans', system-ui, sans-serif;
   --mono:     'Space Mono', monospace;
+}
+body.light-mode{
+  --bg:       #F5F1EA;
+  --stone:    #7A6E62;
+  --cream:    #2C2520;
+  --surface:  #EDE8DF;
+  --surface2: #E4DED3;
+  --glass:    rgba(0,0,0,0.04);
+  --border:   rgba(100,90,80,.18);
+  --shadow-sm:0 2px 12px rgba(0,0,0,.12);
+  --shadow-md:0 6px 30px rgba(0,0,0,.15);
+  --shadow-lg:0 16px 60px rgba(0,0,0,.18);
 }
 html{scroll-behavior:smooth;}
 body{
@@ -506,6 +519,10 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
   text-transform:uppercase;color:var(--stone);opacity:.4;
 }
 
+/* ── THEME TOGGLE ── */
+.theme-toggle{position:fixed;top:16px;right:16px;z-index:999;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:var(--shadow-sm);}
+.theme-toggle:hover{transform:scale(1.1);}
+
 /* ── EXPENSE SPLIT ── */
 .expense-add-row{display:grid;grid-template-columns:1fr 1fr 100px 60px;gap:8px;margin-bottom:16px;}
 @media(max-width:600px){.expense-add-row{grid-template-columns:1fr 1fr;}}
@@ -583,6 +600,8 @@ body.on-madeira .rest-item:hover{border-left-color:#E8922A;}
 <div class="page">
 
 <!-- ── HERO ── -->
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode">☀️</button>
+
 <div class="hero">
   <div class="hero-eyebrow">March 24 – April 7, 2026</div>
   <h1>Norway<br><em>&amp; Portugal</em></h1>
@@ -1955,6 +1974,14 @@ function spinActivity(){
   requestAnimationFrame(animate);
 }
 
+/* ── THEME ── */
+function toggleTheme(){
+  const isLight=document.body.classList.toggle('light-mode');
+  document.getElementById('themeToggle').textContent=isLight?'🌙':'☀️';
+  localStorage.setItem('trip_theme',isLight?'light':'dark');
+  drawWheel(wheelAngle);
+}
+
 /* ── PHOTO WALL ── */
 function initPhotoWalls(){
   document.querySelectorAll('.day-card').forEach(card=>{
@@ -2064,6 +2091,11 @@ function navPhoto(e, key, idx, dir){
   initPhotoWalls();
   renderExpenses();
   drawWheel(0);
+  // Restore theme
+  if(localStorage.getItem('trip_theme')==='light'){
+    document.body.classList.add('light-mode');
+    document.getElementById('themeToggle').textContent='🌙';
+  }
   // Tap wheel to peek at a slice
   const canvas=document.getElementById('spinWheel');
   if(canvas){
